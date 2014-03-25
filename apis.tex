@@ -1,0 +1,328 @@
+\newcommand \continuousDataServiceType{s}
+\newcommand \batchDataServiceType{b}
+\newcommand \computingServiceType{c}
+
+
+
+
+\newcommand \patheScreeningType{[\continuousDataServiceType]}
+\newcommand \patheScreeningName{pathe:screen\_catalog}
+\newcommand \patheScreeningInput{}
+\newcommand \patheScreeningOutput{
+	\begin{tabbing} screen\_item $<$ \= screen $<$ \= id\_theater:$\mathtt{string}$,\\
+                                           \>\>id\_movie:$\mathtt{string}$,\\
+                                           \>\>start\_time:$\mathtt{datetime}$,\\
+                                           \>\>has\_places:$\mathtt{boolean}>$,\\
+                             \>timestamp:$\mathtt{timestamp}>$
+	\end{tabbing}
+}
+
+\newcommand \patheScreening{
+	\begin{minipage}[c]{0.3\textwidth}
+		\patheScreeningType\patheScreeningName$($\patheScreeningInput$)$
+	\end{minipage}
+	\begin{minipage}[c]{0.05\textwidth}
+		$\rightarrow$
+	\end{minipage}
+	\begin{minipage}[t]{0.1\textwidth}
+		\patheScreeningOutput
+	\end{minipage}
+}
+
+
+\newcommand \imdbMovieCatalogType{[\batchDataServiceType]}
+\newcommand \imdbMovieCatalogName{imdb:movie\_catalog}
+\newcommand \imdbMovieCatalogInput{}
+\newcommand \imdbMovieCatalogOutput{
+		\begin{tabbing}$<$\=id\_movie:$\mathtt{string}$, \\
+                        \>title:$\mathtt{string}$, \\
+                        \>release\_date:$\mathtt{date}$, \\
+                        \>rank:$\mathtt{integer}>$
+		\end{tabbing}
+}
+
+\newcommand \imdbMovieCatalog{
+	\begin{minipage}[c]{0.3\textwidth}
+		\imdbMovieCatalogType\imdbMovieCatalogName$($\imdbMovieCatalogInput$)$
+	\end{minipage}
+	\begin{minipage}[c]{0.05\textwidth}
+		$\rightarrow$
+	\end{minipage}
+	\begin{minipage}[t]{0.1\textwidth}
+		\imdbMovieCatalogOutput
+	\end{minipage}
+}
+
+\newcommand \patheTheaterType{[\batchDataServiceType]}
+\newcommand \patheTheaterName{pathe:theater\_catalog}
+\newcommand \patheTheaterInput{}
+\newcommand \patheTheaterOutput{
+		\begin{tabbing} $<$\= movie\_theater$<$\=id\_theater:$\mathtt{string}$,\\
+			 	   \>                  \>name:$\mathtt{string}$,\\
+				   \>                  \>address:$\mathtt{string}>$,\\
+    	                           \> coordinates:$\mathtt{point}>$
+		\end{tabbing}
+}
+\newcommand \patheTheater{
+	\begin{minipage}[c]{0.3\textwidth}
+		\patheTheaterType\patheTheaterName$($\patheTheaterInput$)$
+	\end{minipage}
+	\begin{minipage}[c]{0.05\textwidth}
+		$\rightarrow$
+	\end{minipage}
+	\begin{minipage}[t]{0.1\textwidth}
+		\patheTheaterOutput
+	\end{minipage}
+}
+
+\newcommand \latitudeCoordinatesType{[\continuousDataServiceType]}
+\newcommand \latitudeCoordinatesName{latitude:coodrinates}
+\newcommand \latitudeCoordinatesInput{$<$email:$\mathtt{string}>$}
+\newcommand \latitudeCoordinatesOutput{
+		\begin{tabbing} $<$\= person$<$email:$\mathtt{string}>$,\\
+    	                   \> timestamp:$\mathtt{timestamp}$,\\
+    	                   \> coordinates:$\mathtt{point}>$
+		\end{tabbing}
+}
+
+\newcommand \latitudeCoordinates{
+	\begin{minipage}[c]{0.5\textwidth}
+		\latitudeCoordinatesType\latitudeCoordinatesName$($\latitudeCoordinatesInput$)$
+	\end{minipage}
+	\begin{minipage}[c]{0.05\textwidth}
+		$\rightarrow$
+	\end{minipage}
+	\begin{minipage}[t]{0.1\textwidth}
+		\latitudeCoordinatesOutput
+	\end{minipage}
+}
+
+\newcommand \latitudeYourCoordinatesType{[\batchDataServiceType]}
+\newcommand \latitudeYourCoordinatesName{latitude:your\_coodrinates}
+\newcommand \latitudeYourCoordinatesInput{$<$email:$\mathtt{string}>$}
+\newcommand \latitudeYourCoordinatesOutput{
+		\begin{tabbing} $<$\= person$<$email:$\mathtt{string}>$,\\
+    	                   \> coordinates:$\mathtt{point}>$
+		\end{tabbing}
+}
+
+\newcommand \latitudeYourCoordinates{
+	\begin{minipage}[c]{0.5\textwidth}
+		\latitudeYourCoordinatesType\latitudeYourCoordinatesName$($\latitudeYourCoordinatesInput$)$
+	\end{minipage}
+	\begin{minipage}[c]{0.05\textwidth}
+		$\rightarrow$
+	\end{minipage}
+	\begin{minipage}[t]{0.1\textwidth}
+		\latitudeYourCoordinatesOutput
+	\end{minipage}
+}
+
+\newcommand \latitudeCoordinatesTypeD{[\continuousDataServiceType]}
+\newcommand \latitudeCoordinatesNameD{latitude:coodrinates}
+
+\newcommand \latitudeCoordinatesInputD{
+		\begin{tabbing} $<$\= person$<$\=email:$\mathtt{string}$,\\
+    	                           \>          \>name:$\mathtt{string}>$,\\
+				   \> timestamp:$\mathtt{string}>$
+		\end{tabbing}
+}
+\newcommand \latitudeCoordinatesOutputD{
+		\begin{tabbing} $<$\= person$<$email:$\mathtt{string}>$,\\
+    	                   \> timestamp:$\mathtt{timestamp}$,\\
+    	                   \> coordinates:$\mathtt{point}>$
+		\end{tabbing}
+}
+
+\newcommand \latitudeCoordinatesD{
+\begin{tabular}{p{0.25 \textwidth}p{0.25 \textwidth}m{0.05 \textwidth}m{0.25 \textwidth}}
+                \latitudeCoordinatesTypeD\latitudeCoordinatesNameD$($	&\begin{minipage}[t]{0.1\textwidth}
+                                                                             \latitudeCoordinatesInputD
+                                                                         \end{minipage}
+									& \multirow{5}{*}{$) \rightarrow$}
+									& \multirow{7}{*}{\begin{minipage}[t]{0.25\textwidth}
+                                    							  	\latitudeCoordinatesOutputD
+                                 					                  \end{minipage}}\\
+\end{tabular}
+}
+
+\newcommand \googlemapsDistanceType{[\computingServiceType]}
+\newcommand \googlemapsDistanceName{google\_maps:distance}
+\newcommand \googlemapsDistanceInput{
+		\begin{tabbing} $<$\= address:$\mathtt{string}$,\\
+    	                   	   \> coordinates:$\mathtt{point}>$
+		\end{tabbing}
+}
+\newcommand \googlemapsDistanceOutput{
+		\begin{tabbing} \= distance$<$distance:$\mathtt{real}>$
+		\end{tabbing}
+}
+
+\newcommand \googlemapsDistance{
+\begin{tabular}{p{0.25 \textwidth}p{0.21 \textwidth}m{0.06\textwidth}m{0.23 \textwidth}}
+                \googlemapsDistanceType\googlemapsDistanceName$($	& \multirow{2}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                                                               \googlemapsDistanceInput
+                                                                                           \end{minipage}
+											 }
+									& \multirow{3}{*}{$) \rightarrow$}
+									& \multirow{3}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                                             \googlemapsDistanceOutput
+                                                                          \end{minipage}
+                                                                                         }\\
+\end{tabular}
+}
+
+%\begin{tabular}{p{4cm} b{4cm} >{\raggedright}b{1cm} >{\raggedright}b{4cm}}
+	%\latitudeCoordinatesTypeD\latitudeCoordinatesNameD$($
+%&
+	%\begin{minipage}[t]{0.1\textwidth}
+		%\latitudeCoordinatesInputD
+	%\end{minipage}
+%&
+	%\begin{minipage}[t]{0.05\textwidth}
+		%$) \rightarrow$
+	%\end{minipage}
+%&
+	%\begin{minipage}[t]{0.1\textwidth}
+		%\latitudeCoordinatesOutputD
+	%\end{minipage}
+%\end{tabular}
+%\end{minipage}
+%}
+
+\newcommand \NowType{[\computingServiceType]}
+\newcommand \NowName{win\_performing::now}
+\newcommand \NowInput{ $\{$tuple:$\mathtt{tuple}\}$ }
+\newcommand \NowOutput{$\lceil$tuple:$\mathtt{tuple}\rceil$ }
+\newcommand \Now{
+\begin{tabular}{p{0.25 \textwidth}p{0.21 \textwidth}m{0.06\textwidth}m{0.23 \textwidth}}
+                \NowType\NowName$($	& \multirow{1}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \NowInput
+                                                          \end{minipage}
+							 }
+					& \multirow{1}{*}{$) \rightarrow$}
+					& \multirow{1}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \NowOutput
+                                                          \end{minipage}
+                                                         }\\
+\end{tabular}
+}
+
+\newcommand \TopKType{[\computingServiceType]}
+\newcommand \TopKName{win\_performing::top\_k}
+\newcommand \TopKInput{ 
+                \begin{tabbing} $<$\= $\{$tuple:$\mathtt{tuple}\}$, \\
+                                   \> k:$\mathtt{integer}>$
+                \end{tabbing}
+			}
+
+\newcommand \TopKOutput{$\{$tuple:$\mathtt{tuple}\}$ }
+\newcommand \TopK{
+\begin{tabular}{p{0.25 \textwidth}p{0.21 \textwidth}m{0.06\textwidth}m{0.23 \textwidth}}
+                \TopKType\TopKName$($	& \multirow{2}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \TopKInput
+                                                          \end{minipage}
+							 }
+					& \multirow{3}{*}{$) \rightarrow$}
+					& \multirow{3}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \TopKOutput
+                                                          \end{minipage}
+                                                         }\\
+\end{tabular}
+}
+
+
+\newcommand \HashJoinType{[\computingServiceType]}
+\newcommand \HashJoinName{hadas\_doperators::hash\_join}
+\newcommand \HashJoinInput{ 
+                \begin{tabbing} $<$\= $\{$inner\_tuple:$\mathtt{tuple}\}$, \\
+                                   \> $\{$outer\_tuple:$\mathtt{tuple}\}$, \\
+                                   \> condition:$\mathtt{string}>$
+                \end{tabbing}
+			}
+
+\newcommand \HashJoinOutput{$\{$tuple:$\mathtt{tuple}\}$ }
+\newcommand \HashJoin{
+\begin{tabular}{p{0.30 \textwidth}p{0.19 \textwidth}m{0.06\textwidth}m{0.2 \textwidth}}
+                \HashJoinType\HashJoinName$($	& \multirow{3}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \HashJoinInput
+                                                          \end{minipage}
+							 }
+					& \multirow{5}{*}{$) \rightarrow$}
+					& \multirow{5}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \HashJoinOutput
+                                                          \end{minipage}
+                                                         }\\
+\end{tabular}
+}
+
+\newcommand \SelectionType{[\computingServiceType]}
+\newcommand \SelectionName{hadas\_doperators::selection}
+\newcommand \SelectionInput{ 
+                \begin{tabbing} $<$\= $\{$tuple:$\mathtt{tuple}\}$, \\
+                                   \> condition:$\mathtt{string}>$
+                \end{tabbing}
+			}
+
+\newcommand \SelectionOutput{$\{$tuple:$\mathtt{tuple}\}$ }
+\newcommand \Selection{
+\begin{tabular}{p{0.30 \textwidth}p{0.19 \textwidth}m{0.06\textwidth}m{0.2 \textwidth}}
+                \SelectionType\SelectionName$($	& \multirow{2}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \SelectionInput
+                                                          \end{minipage}
+							 }
+					& \multirow{3}{*}{$) \rightarrow$}
+					& \multirow{3}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \SelectionOutput
+                                                          \end{minipage}
+                                                         }\\
+\end{tabular}
+}
+
+\newcommand \ProjectionType{[\computingServiceType]}
+\newcommand \ProjectionName{hadas\_doperators::projection}
+\newcommand \ProjectionInput{ 
+                \begin{tabbing} $<$\= $\{$tuple:$\mathtt{tuple}\}$, \\
+                                   \> param_list:$\mathtt{string}>$
+                \end{tabbing}
+			}
+
+\newcommand \ProjectionOutput{$\{$tuple:$\mathtt{tuple}\}$ }
+\newcommand \Projection{
+\begin{tabular}{p{0.30 \textwidth}p{0.19 \textwidth}m{0.06\textwidth}m{0.2 \textwidth}}
+                \ProjectionType\ProjectionName$($	& \multirow{2}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \ProjectionInput
+                                                          \end{minipage}
+							 }
+					& \multirow{3}{*}{$) \rightarrow$}
+					& \multirow{3}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \ProjectionOutput
+                                                          \end{minipage}
+                                                         }\\
+\end{tabular}
+}
+
+
+\newcommand \RenameType{[\computingServiceType]}
+\newcommand \RenameName{hadas\_doperators::rename}
+\newcommand \RenameInput{ 
+                \begin{tabbing} $<$\= $\{$tuple:$\mathtt{tuple}\}$, \\
+                                   \> new_name:$\mathtt{string}>$
+                \end{tabbing}
+			}
+
+\newcommand \RenameOutput{$\{$tuple:$\mathtt{tuple}\}$ }
+\newcommand \Rename{
+\begin{tabular}{p{0.30 \textwidth}p{0.19 \textwidth}m{0.06\textwidth}m{0.2 \textwidth}}
+                \RenameType\RenameName$($	& \multirow{2}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \RenameInput
+                                                          \end{minipage}
+							 }
+					& \multirow{3}{*}{$) \rightarrow$}
+					& \multirow{3}{*}{\begin{minipage}[t]{0.1\textwidth}
+                                                             \RenameOutput
+                                                          \end{minipage}
+                                                         }\\
+\end{tabular}
+}
+

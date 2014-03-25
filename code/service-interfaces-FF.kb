@@ -1,0 +1,22 @@
+service_intereface(profile).
+method(profile,     profile).
+bound_p(profile, profile, nickname, string).
+free_p(   profile, profile, age,      int).
+free_p(   profile, profile, sex,      string).
+free_p(   profile, profile, email,    string).
+
+service_interface(interests).
+method(interests,   interests).
+bound_p(interests, interests, nickname, string).
+free_p(   interests, interests, tag,      string).
+free_p(   interests, interests, score,    real).
+
+parameter(DSN,ON,PN,T):- bound_p(DSN,ON,PN,T).
+parameter(DSN,ON,PN,T):- free_p(DSN,ON,PN,T).
+
+service_interface(location).
+method(location,location).
+bound_p(location, location, nickname, string).
+free_p(   location, location, lat,      real).
+free_p(   location, location, lon,      real).
+

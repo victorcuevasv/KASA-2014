@@ -1,0 +1,140 @@
+fluents:
+initiated.
+connected(DS) requires method(DSN,ON), retrieve_(DSN,ON,DS).
+all_connected.
+retrieved(DS) requires method(DSN,ON), retrieve_(DSN,ON,DS).
+all_retrieved.
+joined(DS1,P1,DS2,P2) requires parameter(DSN1,ON1,P1,_),  retrieve_(DSN1,ON1,DS1),
+                               parameter(DSN2,ON2,P2,_),  retrieve_(DSN2,ON2,DS2),
+                               join_(DS1,P1,DS2,P2).
+selected(DS,P) requires parameter(DSN,ON,P,_), retrieve_(DSN,ON,DS), select_(DS,P).
+all_selected_from(DS) requires retrieve_(DSN,ON,DS).
+all_selected.
+projected(DS,P) requires project_(DS,P,_).
+all_projected_from(DS) requires retrieve_(DSN,ON,DS).
+all_projected.
+query_processed.
+delivered.
+finished.
+
+actions:
+init.
+finish.
+on_demand(DS) requires method(DSN,ON), retrieve_(DSN,ON,DS).
+
+
+bind_selection(DS,BP) requires method(DSN,ON),
+         retrieve_(DSN,ON,DS),  bound_p(DSN,ON,BP,_), select_(DS,BP).
+
+
+bind_join(DS1,P1,DS2,BP2)
+   requires method(DSN1,ON1), retrieve_(DSN1,ON1,DS1),
+            parameter(DSN1,ON1,P1,_),
+            method(DSN2,ON2), retrieve_(DSN2,ON2,DS2),
+            bound_p(DSN2,ON2,BP2,_),
+            join_(DS1,P1,DS2,BP2).
+
+
+
+select(DS,P) requires method(DSN,ON),
+                      retrieve_(DSN,ON,DS),
+                      parameter(DSN,ON,P,_),
+                      select_(DS,P).
+
+project(DS,P) requires project_(DS,P,_).
+
+output.
+
+always:
+executable init if   -initiated.
+caused     initiated after init.
+executable finish if not finished, delivered.
+caused     finished after finish.
+
+
+executable on_demand(DS) if initiated.
+caused     connected(DS) after on_demand(DS).
+
+caused -all_connected if not connected(DS).
+caused  all_connected if not -all_connected.
+
+executable bind_selection(DS,BP)
+        if not retrieved(DS), connected(DS).
+caused retrieved(DS) after bind_selection(DS,BP).
+
+
+executable bind_join(DS1,P1,DS2,P2) if not joined(DS1,P1,DS2,P2),
+                                       retrieved(DS), connected(DS).
+caused joined(DS1,P1,DS2,P2) after bind_join(DS1,P1,DS2,P2).
+caused retrieved(DS) if joined(DS1,P1,DS2,P2) after bind_join(DS1,P1,DS2,P2).
+
+caused -all_retrieved if not retrieved(DS), retrieve_(DSN,ON,DS).
+caused  all_retrieved if not -all_retrieved.
+
+executable select(DS,P) if not selected(DS,P),
+                               retrieved(DS), select_(DS,P).
+caused     selected(DS,P) after select(DS,P).
+caused -all_selected_from(DS) if not selected(DS,P), select_(DS,P).
+caused  all_selected_from(DS) if not -all_selected_from(DS), retrieved(DS).
+
+caused -all_selected if -all_selected_from(DS), select_(DS,P).
+caused -all_selected if -all_selected_from(DS), not select_(DS,P), parameter(DSN,ON,P,_), retrieve_(DSN,ON,DS).
+caused  all_selected if not -all_selected.
+
+executable project(DS,P) if not projected(DS,P), retrieved(DS), project_(DS,P,_).
+caused     projected(DS,P) after project(DS,P).
+
+
+caused -all_projected_from(DS) if not projected(DS,P), project_(DS,P,_).
+caused  all_projected_from(DS) if not -all_projected_from(DS) after project(DS,P).
+
+caused -all_projected if -all_projected_from(DS), project_(DS,P,_).
+caused  all_projected if not -all_projected.
+
+	
+caused -query_processed if not all_connected.
+caused -query_processed if not all_retrieved.
+caused -query_processed if not all_selected.
+caused -query_processed if not all_projected.
+caused  query_processed if not -query_processed.
+
+executable output if query_processed, not delivered.
+caused    delivered after output.
+
+inertial initiated.
+inertial connected(DS).
+inertial all_connected.
+inertial retrieved(DS).
+inertial all_retrieved.
+inertial joined(DS1,P1,DS2,P2).
+inertial selected(DS,P).
+inertial all_selected_from(DS).
+inertial -all_selected_from(DS).
+inertial all_selected.
+inertial projected(DS,P).
+inertial all_projected_from(DS).
+inertial -all_projected_from(DS).
+inertial all_projected.
+inertial -query_processed.
+inertial query_processed.
+inertial -delivered.
+inertial delivered.
+inertial finished.
+
+initially:
+       -initiated.
+       -connected(DS).
+       -all_connected.
+       -retrieved(DS).
+       -all_retrieved.
+       -joined(DS1,P1,DS2,P2).
+       -selected(DS,P).
+       -all_selected_from(DS).
+       -all_selected.
+       -projected(DS,P).
+       -all_projected_from(DS).
+       -all_projected.
+       -finished.
+       -query_processed.
+
+goal: finished?(8)
