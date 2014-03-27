@@ -1,0 +1,62 @@
+%\usepackage[dvips]{graphicx}
+\usepackage{epsfig}
+%\usepackage[chapter]{theorems}
+\usepackage{symbols}
+\usepackage{url}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{color}
+\usepackage{alltt}
+\usepackage{dsfont}
+\usepackage{upgreek}
+\usepackage[tight]{shorttoc}
+\usepackage{multirow}
+\usepackage{rotating}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage[rounded]{syntax}
+\usepackage{slashbox}
+\usepackage{graphicx, subfig}
+\usepackage{enumerate}
+\usepackage{amssymb}
+\usepackage{appendix}
+\usepackage{eurosym}
+\usepackage{amsfonts}
+\usepackage{pifont}
+%\usepackage{hyperref}
+\usepackage{pdflscape}
+\usepackage{amsmath}
+\usepackage{fixltx2e} 
+
+\lstset{ %
+        language=Prolog,                % the language of the code
+        basicstyle=\scriptsize,       % the size of the fonts that are used for the code
+        numbers=right,                   % where to put the line-numbers
+        numberstyle=\scriptsize,      % the size of the fonts that are used for the line-numbers
+        stepnumber=1,                   % the step between two line-numbers. If it's 1, each line 
+                                % will be numbered
+        numbersep=0.05cm,                  % how far the line-numbers are from the code
+        backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+        showspaces=false,               % show spaces adding particular underscores
+        showstringspaces=false,         % underline spaces within strings
+        showtabs=false,                 % show tabs within strings adding particular underscores
+        frame=none,                   % adds a frame around the code
+        tabsize=3,                      % sets default tabsize to 2 spaces
+        captionpos=b,                   % sets the caption-position to bottom
+        breaklines=true,                % sets automatic line breaking
+        breakatwhitespace=false,        % sets if automatic breaks should only happen at whitespace
+        %title=\lstname,                 % show the filename of files included with \lstinputlisting;
+                                   % also try caption instead of title
+        escapeinside={\%*}{*)},         % if you want to add a comment within your code
+        deletekeywords={not}
+        %morekeywords={luents, actions, always, initial, if, inertial, after, inertial, noConcurrency,goal,not,caused,executable,nonexecutable,forbiden,requires}            % if you want to add more keywords to the set
+}
+\newcommand{\hlight}[2]{\begingroup \color{#1}#2 \endgroup}
+\newcommand{\manolo}[2]{{\hlight{#1}{#2}}}
+
+\def\ie{\textit{i.e.}}
+\def\eg{\textit{e.g.}}
+\def\cf{\textit{cf.}}
+\def\aka{\textit{a.k.a.}}

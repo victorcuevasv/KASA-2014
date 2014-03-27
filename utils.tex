@@ -1,0 +1,15 @@
+\newcommand\SeQLcode[3]{
+	\lstinputlisting[language=SQL, morekeywords= {now, top}, caption={#1}, columns=fixed, label=#3]{#2}
+}
+
+\newcommand\PrologCode[3][]{
+	\lstinputlisting[language=Prolog, morekeywords={fluents, actions, always, initial, if, inertial, after, inertial, noConcurrency,goal,not,caused,executable,nonexecutable,forbiden,requires}, caption={#1}, columns=fixed, label=#3]{#2}
+}
+
+\newcommand{\tickYes}{\checkmark}
+
+\newcommand{\tickNo}{\hspace{1pt}\ding{55}}
+
+\newcommand\dt[1]{$\mathtt{#1}$}
+
+\newcommand{\sembrack}[1]{[\![#1]\!]}
