@@ -1,0 +1,7 @@
+
+\section{Related work} \label{sec:relatedwork}
+
+The optimization of workflows involving data services must tackle challenges such as autonomy, non-durability of data, absence of fine grain data statistics, etc. For instance, the evaluation of queries over Web services presented in \cite{Srivastava2006} proposes an optimization approach by ordering the service calls in a pipelined fashion and by tunning the size of data. However, the control over data size (i.e. data chunks) and selectivity statistics is a strong assumption because of the autonomy of services and the absence of data statistics in many real scenarios.
+
+Another aspect to consider during the optimization is the selection of the service instances, which represents a factor for the service coordination cost. In \cite{Claro2005,Wada2008} the optimal selection of services with a multidimensional cost is proposed for optimizing the complete service coordination. This selection is done by solving a multi-objective assignation problem for a set of abstract services. However, the possibility to modify the order of service invocations is not considered and this is a key issue in service-oriented workflow optimization.
+

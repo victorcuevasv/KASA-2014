@@ -1,7 +1,7 @@
-project_(p,nickname,n).
-project_(i,score,s).
-project_(i,tag,t).
-retrieve_(profile,profile,p).
-retrieve_(interests,interests,i).
-select_(p, nickname).
-join_(p,nickname,i,nickname).
+project_(p1,nickname,n).
+project_(i1,score,s).
+project_(i1,tag,t).
+retrieve_(p,profl,p1).
+retrieve_(i,interests,i1).
+select_(p1,nickname).
+join_(p1,nickname,i1,nickname).

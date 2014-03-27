@@ -1,0 +1,17 @@
+
+\section{Experiments} \label{sec:experiments}
+
+We performed experiments with the objective of measuring the size of the search space of workflows given a fixed number of activities and a goal to define the length of the workflow. In order to test the performance of workflow generation, we have defined four test cases. All are based on the example of subsection \ref{subsec:kb}.
+	
+Another dimension for the experiment is the max length of plans. The generated plans depend on a required plan length. In DLV-K, one must specify the desired length that determines the size of the search space of workflows and thus the required generation time. In the experiments we used lengths from 6 to 14, and we measure (1)the length of the generated plans, (2)the size of the search space, and (3) the execution time of the generation.
+
+The data retrieved from the experiments show (1) the behavior of the search space growth during the generation and (2) the time required for generating all the search space. Each workflow requires a fixed number of activities accordingly with the number of data operators required to process its result. Given that the size of plans are subject to the length $l$, there are workflows that require a larger $l$ than others.
+
+For example, $Q1$ with $11$ activities, requires at least an $l=7$ to get workflows with the must possible parallel compositions, and at most $l=11$ to get completely sequential compositions. We invite the reader to visit the URLs http://goo.gl/XKZuL and http://goo.gl/z4iu3 to appreciate examples of workflows of 7-length and 11-length respectively. The growth of search space is shown in Table \ref{tab:tablesize} and, as was expected, the size of search space tends to be stable once the maximum length is reached. For example, $Q1$ reaches the maximum length with $l=11$. This is analogous for $Q2$, $Q3$, and $Q4$. It can be noted that the search spaces have an exponential growth until the max length.
+\tabsize{tab:tablesize}{Search space growth respect to the plan length}
+Besides the size of search space, the time for processing the workflow generation is also exponential and it is not feasible to generate completely the search space in the context of query optimization. Thus, this enumeration must be done implicitly in order to avoid the combinatorial explosion.
+
+
+
+
+

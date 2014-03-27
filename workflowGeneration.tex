@@ -1,0 +1,173 @@
+
+\section{Workflow generation} \label{sec:queryWorkflowGen}
+ 
+In our workflow generation apporach we limit ourselves to workflows accessing on-demand data only, represented as flat tuples. For example, ``\textit{What are the interests of my friend Joe}'', where only on-demand data are considered.
+
+Workflow generation is the process of enumerating all the valid workflows in order to have a search space for choosing a subset that satisfies the user's preferences. The generation is subject to query workflow constraints for composing activities. We model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k} that allows the sequential or parallel execution of query workflow activities.
+         
+In DLV-K, planning problems have a set of facts that represent the problem domain named background knowledge. The facts are predicates of static knowledge and are the input of the planning problem. Planning problems are modeled as state machines described by a set of fluents and a set of actions. A fluent is a property of an object in the world and is part of the states of the world \cite{Baral2003}. Fluents may be true, false or unknown. An action is executable if a precondition holds in the current state. Once an action is executed, the fluents and thus the state of the plan are modified. The action rules define the subset of fluents that must be held before the execution of an action (\ie{} pre-conditions) and the subset of fluents to be held after the execution (\ie{} post-conditions). Finally, a goal is a set of fluents that must be reached at the end of plan. A goal is expressed by the conjunction of fluents and by a plan length $l \in \mathds{Z}^{+}$.
+
+The mapping from workflow generation to a planning problem is direct, as shown in Table \ref{tab:mappingQW-PP}. The APIs and the application requirements (operations on data) are modeled as facts of the background knowledge. The execution state of a workflow is modeled as fluents and workflow activities as actions.
+
+	\begin{table}
+	   \begin{center}
+	      \begin{tabular}{|r|l|}
+	         \hline
+	         \multicolumn{1}{|c|}{\textbf{Workflow }}& \multicolumn{1}{c|}{\textbf{Planning problem}} \\
+	         \hline
+	         APIs, operations & Facts (background knowledge) \\
+	         \hline
+	         Workflow states & Fluents \\
+	         \hline
+	         Workflow activities & Actions \\
+	         \hline
+	         Result delivery & Goal: \texttt{finished?(}$l \in \mathds{Z}^{+}$\texttt{)} \\
+	         \hline
+	      \end{tabular}
+	   \end{center} 
+	   \caption{Mapping to a planning problem for a workflow}
+	   \label{tab:mappingQW-PP}
+	\end{table}
+
+Next we show, through a simple example, how we represent the background knowledge for workflow generation. Afterwards, we show how the workflow state and activities are expressed in DLV-K.
+
+\subsection{Background knowledge} \label{subsec:kb}
+The background knowledge is the input for workflow generation and it is represented by a set of facts. The facts are two-folded in (1) service interface representation and (2) operations representation.
+               
+\textbf{Service interface} We characterize service APIs with the following structure
+			
+{\texttt{s\_name:m\_name(B\textsubscript{1}:T\textsubscript{1}?,...,B\textsubscript{m}:T\textsubscript{m}?,F\textsubscript{1}:T'\textsubscript{1}!,...,F\textsubscript{n}:T'\textsubscript{n}!)}}
+
+where the service identified by \texttt{s\_name} has a method named \texttt{m\_name} with \texttt{m} bound parameters, each with an unique name \texttt{B\textsubscript{i}} within the method header and associated with a type \texttt{T\textsubscript{i}}. Analogously there are \texttt{n} free parameters similarly named and typed. Bound and free parameters will be identified by question and exclamation marks, respectively. Consider the following service methods:
+
+{\footnotesize\texttt{p:profl(str:nickname?,int:age!,str:sex!,str:email!)}}
+
+This method provides the user profile formed by \texttt{age, sex} and \texttt{email} of a given user with a \texttt{nickname}.
+
+{\footnotesize\texttt{i:interests(str:nickname?,str:tag!,real:score!)}}
+
+This method provides the interests of a given user identified by a \texttt{nickname}. An interest is represented by a \texttt{tag} and has a \texttt{score} that quantifies the interest over the tag.
+
+The service interface and its methods are described by the facts \texttt{service_interface/1} and \texttt{method/2} respectively. We distinguish between bound and free parameters with the facts \texttt{bound_p/4} and \texttt{free_p/4}. The normal form of a parameter is stated by \texttt{parameter/4} and this rule guarantees that the parameter name is unique in the context of the service method.
+
+%\lstinputlisting[lastline=15, fontadjust=true, label=list:service-interfaces,caption={Service interfaces}]{code/service-interfaces-FF.kb}
+
+\lstinputlisting[fontadjust=true, label=list:service-interfaces]{code/service-interfaces-FF.kb}
+            
+\textbf{Operations} Now consider the application requirement ``\textit{What are the interests of my friend Joe}'' that is represented by the operation facts:
+
+%\lstinputlisting[fontadjust=true, label=list:hybridQuery, caption={Hybrid query in facts}]{code/query-FF1.kb}
+
+\lstinputlisting[fontadjust=true, label=list:hybridQuery]{code/query-FF1.kb}
+
+This requirement expresses the need of data over the methods \texttt{p:profl} and \texttt{i:interests} methods, the nickname of the profile is filtered and correlated with the nickname of interests. Finally, the parameters nickname, score and tag are projected. Observe that the selection over the nickname attribute is indicated only in intention because the equality operators are not significant for the workflow generation.
+
+\subsection{Workflow activities}
+Workflow activities are represented as actions in DLV-K. In general, the activities are predicates that hold if their facts from background knowledge are true. There are also activities that are independent from facts.
+         
+\textbf{init and finish} These activities have the special purpose to initialize and terminate the workflow execution. Thus their semantics is not associated with the application and there is no dependency with the background knowledge.
+
+\textbf{on-demand} This activity establishes a connection with a data service method and requires a method of a service and the expressed need of the user to be fulfilled.
+
+%\lstinputlisting[firstline=23, lastline=23, fontadjust=false, label=list:qw-on-demand, caption={on-demand activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=23, lastline=24, fontadjust=false, label=list:qw-on-demand]{code/aesop2.plan}
+
+\textbf{bind_selection}
+This activity invokes and retrieves data from a service method. The invocation is done by a given bound parameter valid in the service interface definition. The workflow must express which data are required from this service method in respect to a selected bound parameter.
+
+%\lstinputlisting[firstline=26, lastline=27, fontadjust=false, label=list:qw-bind-selection, caption={bind-selection activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=27, lastline=28, fontadjust=false, label=list:qw-bind-selection]{code/aesop2.plan}
+
+\textbf{bind_join} The required correlation in the workflow is performed by this activity. Correlation is binary between data from two service methods on a parameter from each one. The parameter from the outer method must be bound. This activity is analogous to \texttt{bind_selection} but this one takes the value of a bound parameter from the output of another method (\ie{} the inner method).
+                     
+%\lstinputlisting[firstline=30, lastline=35, fontadjust=false, label=list:qw-bind-join, caption={bind-join activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=31, lastline=35, fontadjust=false, label=list:qw-bind-join]{code/aesop2.plan}
+                     
+\textbf{select} The select activity performs the filtering over a parameter of a required service method.
+            
+%\lstinputlisting[firstline=39, lastline=42, fontadjust=false, label=list:qw-select, caption={select activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=39, lastline=42, fontadjust=false, label=list:qw-select]{code/aesop.plan}
+                     
+\textbf{project} This activity projects a parameter of a service method.
+                     
+%\lstinputlisting[firstline=44, lastline=44, fontadjust=false, label=list:qw-project, caption={project activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=44, lastline=44, fontadjust=false, label=list:qw-project]{code/aesop.plan}
+				   
+The semantics of activities described above is completed with constraints that define their pre-conditions and post-conditions.
+				
+\subsection{Workflow constraints} These constraints define the conditions associated to the execution of activities. A condition is a state of knowledge modifiable by the execution of the activities. Below we present the constraints that describe how the activities can be performed and how a query plan should be constructed.
+               
+\textbf{init and finish} The first executable activity in a query workflow is \textbf{init}. This activity has no previous activity, thus its pre-condition is that the query workflow is not \texttt{initiated} and produces a new state \texttt{initiated}. The last activity is \texttt{finish} and there is no other activity executed after this one. The pre-condition to execute \texttt{finish} is that there is not evidence that the query workflow is \texttt{finished} and the data is already \texttt{delivered} (See \texttt{output} activity below for details about \texttt{delivered}). The post-condition of \texttt{finish} is \texttt{finished} and this is always the goal for the generation.
+                            
+%\lstinputlisting[firstline=49, lastline=52, fontadjust=false, label=list:init-activity, caption={\texttt{init} and \texttt{finish} activities}]{code/aesop.plan}
+
+\lstinputlisting[firstline=49, lastline=52, fontadjust=false, label=list:init-activity]{code/aesop.plan}
+                   
+\textbf{on-demand} Once initiated the plan, the data services must be \texttt{connected(DS)}. This fluent is produced by the execution of \texttt{on_demand(DS)} activity. 
+
+%\lstinputlisting[firstline=55, lastline=56, fontadjust=false, label=list:on-demand-activity, caption={on-demand activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=55, lastline=56, fontadjust=false, label=list:on-demand-activity]{code/aesop.plan}
+
+During the execution, all data services must be connected. Therefore, there is a fluent \texttt{all_connected} that is false if there is not evidence that a data service is connected. Otherwise, it is true.
+
+%\lstinputlisting[firstline=58, lastline=59, fontadjust=false, label=list:all-connected-fluent, caption={all\_connected fluent}]{code/aesop.plan}
+
+\lstinputlisting[firstline=58, lastline=59, fontadjust=false, label=list:all-connected-fluent]{code/aesop.plan}
+     
+\textbf{bind_selection} One of the activities that implements data retrieval is bind selection. It is only executable if there is not evidence that the data service \texttt{DS} has already been retrieved and if there is a connection with \texttt{DS}. Once the bind selection is executed, the fluent \texttt{retrieved(DS)} is true. \texttt{retrieved(DS)} is an inertial fluent, thus the re-execution is not possible. 
+      
+%\lstinputlisting[firstline=61, lastline=63, fontadjust=false, label=list:bind-selection-activity, caption={bind\_ selection activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=61, lastline=63, fontadjust=false, label=list:bind-selection-activity]{code/aesop.plan}
+
+\textbf{selection} The filtering of data is done by the \texttt{selection} activity. It is executable if there is not evidence that the parameter \texttt{P} of \texttt{DS} has already been selected. There is also need that the data from \texttt{DS} has been retrieved and obviously the selection \texttt{select_(DS,P)} must be part of the workflow. The execution of the selection makes the fluent true \texttt{selected(DS,P)} and it is inertial, so the re-execution of the selection \texttt{select(DS,P)} is not possible.
+
+%\lstinputlisting[firstline=74, lastline=76, fontadjust=false, label=list:select-activity, caption={select activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=74, lastline=76, fontadjust=false, label=list:select-activity]{code/aesop2.plan}
+
+In order to be aware of the state of selection over all the required parameters of a method \texttt{DS}, the all_selected_from becomes true if there is no other parameter pending to be selected.
+
+%\lstinputlisting[firstline=77, lastline=78, fontadjust=false, label=list:all-selected-from, caption={all\_select\_from fluent}]{code/aesop.plan}
+
+\lstinputlisting[firstline=77, lastline=80, fontadjust=false, label=list:all-selected-from]{code/aesop2.plan}
+
+Analogously, all parameters from all data services must be selected when they are required. Therefore, there is the fluent \texttt{all\_selected}. This fluent is true if there is no other method \texttt{DS} pending to be selected.
+
+%\lstinputlisting[firstline=80, lastline=82, fontadjust=false, label=list:all-selected, caption={all\_select fluent}]{code/aesop.plan}
+
+\lstinputlisting[firstline=80, lastline=82, fontadjust=false, label=list:all-selected]{code/aesop.plan}
+
+\textbf{projection} This activity is executable if there is not evidence that the parameter \texttt{P} of \texttt{DSOName} has been projected. There is also need that the data from \texttt{DSOName} be retrieved. The execution of projection makes the fluent \texttt{projected} true and it is inertial, thus the re-execution of the projection is not possible.
+               
+%\lstinputlisting[firstline=84, lastline=85, fontadjust=false, label=list:project, caption={project activity}]{code/aesop.plan}
+
+\lstinputlisting[firstline=84, lastline=85, fontadjust=false, label=list:project]{code/aesop.plan}
+
+The projected fluent is true once the action \texttt{project(DS,P)} is done. During the workflow execution, all the required parameters must be projected. For \texttt{DS} grain the fluent \texttt{all\_projected\_from} is true if there is no other parameter from \texttt{DS} pending to be projected. For the entire workflow, the fluent \texttt{all\_projected} is true if there is no other \texttt{DS} pending to be projected.
+                
+%\lstinputlisting[firstline=88, lastline=92, fontadjust=false, label=list:all-projected-from, caption={all\_projected\_from fluent}]{code/aesop.plan}
+
+\lstinputlisting[firstline=88, lastline=92, fontadjust=false, label=list:all-projected-from]{code/aesop.plan}
+                    
+\textbf{output} Once the operations are processed, data must be delivered by the activity \texttt{output}. In order to model this precondition, the fluent \texttt{query\_processed} is true if all the other possible activities have been processed. Otherwise, the fluent is \texttt{-query\_processed}.
+
+%\lstinputlisting[firstline=95, lastline=99, fontadjust=false, label=list:query-processed, caption={query\_processed fluent}]{code/aesop.plan}
+
+\lstinputlisting[firstline=95, lastline=99, fontadjust=false, label=list:query-processed]{code/aesop.plan}
+
+Once the query is processed, the \texttt{output} activity delivers the result and the fluent \texttt{delivered} becomes true.
+
+%\lstinputlisting[firstline=101, lastline=102, fontadjust=false, label=list:output, caption={output fluent}]{code/aesop.plan}
+
+\lstinputlisting[firstline=101, lastline=102, fontadjust=false, label=list:output]{code/aesop.plan}
+
+
+
+
