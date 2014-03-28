@@ -16,7 +16,7 @@ $\mathtt{profile(nickname) \rightarrow person:\langle age, gender, email\rangle}
 $\mathtt{interests(nickname) \rightarrow \left[s\_tag:\langle tag, score\rangle\right]}$
 	
 	
-The first provides a single person tuple denoting a profile of the user, once given a request represented by his/her nickname. The second produces, given the nickname as well, a list of s\_tag tuples denoting the interests of the user by scored tags (\eg{} 'music' with 8.5).
+The first provides a single person tuple denoting a profile of the user, once given a request represented by her nickname. The second produces, given the nickname as well, a list of s\_tag tuples denoting the interests of the user by scored tags (\eg{} 'music' with 8.5).
 	
 In order to obtain the desired result we need to give to it an executable form, in our case a workflow of activities implementing a service coordination. Workflows are built by the parallel and sequential composition of activities that are bound to data and computation services; the first provide the data, while the latter process them as required.
 
@@ -48,9 +48,9 @@ There are three types of vertices: \textit{activities} perform a service method 
 
 Two kinds of computation services form part of our approach: simple computation services and composite computation services specified in the ASASEL language.
 	
-\textbf{Simple computation services} These involve a single service operation invocation to process data (see Figure \ref{fig:simpleService}). The distance computation service relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
+\textbf{Simple computation services}  involve a single service operation invocation to process data (see Figure \ref{fig:simpleService}). The distance computation service relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
 
-\textbf{Composite computation services} These process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
+\textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
 		
 Figure \ref{fig:compositeService} depicts a composite computation service, it evaluates the join operator based on the symmetric hash-join algorithm and two instances of a stateful \texttt{hash-index} service. Several interrelated operation invocations on both service instances, as well as reads and updates on local data items, are used to find the tuple matches that form part of the join result. The specification of a tuple-based window service in ASASEL is presented in Listing \ref{TimeWindowListing}.
 		
