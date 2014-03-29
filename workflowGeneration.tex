@@ -23,15 +23,13 @@
         %morekeywords={luents, actions, always, initial, if, inertial, after, inertial, noConcurrency,goal,not,caused,executable,nonexecutable,forbiden,requires}            % if you want to add more keywords to the set
 }
 
-\section{Workflow generation} \label{sec:queryWorkflowGen}
- 
-In our workflow generation approach addresses workflows accessing on-demand data, represented as flat tuples. For example, ``\textit{What are the interests of my friend Joe}'', assuming that there is an on-demand data service that gives access to a base of interests for a set of users.
+\section{Workflow transformation} \label{sec:queryWorkflowGen}
 
-Workflow generation is the process of enumerating all the valid workflows that can answer a query. The enumeration leads to a search space for choosing a subset that satisfies the user's preferences. The generation is subject to query workflow constraints for composing activities. We model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k} that allows the sequential or parallel execution of query workflow activities.
-         
-In DLV-K, planning problems have a set of facts that represent the problem domain named background knowledge. The facts are predicates of static knowledge and are the input of the planning problem. Planning problems are modeled as state machines described by a set of fluents and a set of actions. A fluent is a property of an object in the world and is part of the states of the world. Fluents may be true, false or unknown. An action is executable if a precondition holds in the current state. Once an action is executed, the fluents and thus the state of the plan are modified. The action rules define the subset of fluents that must be held before the execution of an action (\ie{} pre-conditions) and the subset of fluents to be held after the execution (\ie{} post-conditions). Finally, a goal is a set of fluents that must be reached at the end of plan. A goal is expressed by the conjunction of fluents and by a plan length $l \in \mathds{Z}^{+}$.
+Workflow transformation is the process of enumerating all the equivalent workflows that satisfy the same functional requirements. The enumeration leads to a search space for choosing a subset that satisfies the user's preferences. The transformation is subject to constraints for composing workflow activities. We model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k}. Currently, our transformation approach is limited to workflows accessing on-demand data represented as flat tuples, and to obtaining workflows with increasing levels of parallelism in their structure.
 
-The mapping from workflow generation to a planning problem is direct, as shown in Table \ref{tab:mappingQW-PP}. The APIs and the application requirements (operations on data) are modeled as facts of the background knowledge. The execution state of a workflow is modeled as fluents and workflow activities as actions.
+In DLV-K, planning problems have a set of facts that represent the problem domain named background knowledge. The facts are predicates of static knowledge and are the input of the planning problem. Planning problems are modeled as state machines described by a set of fluents and a set of actions. A fluent is a property of an object in the world and is part of the states of the world. Fluents may be true, false or unknown. An action is executable if a precondition holds in the current state. Once an action is executed, the fluents and thus the state of the plan are modified. The action rules define the subset of fluents that must be held before the execution of an action (\ie{} pre-conditions) and the subset of fluents to be held after the execution (\ie{} post-conditions). Finally, a goal is a set of fluents that must be reached at the end of the plan. A goal is expressed by the conjunction of fluents and by a plan length $l \in \mathds{Z}^{+}$.
+
+The mapping from workflow transformation to a planning problem is direct, as shown in Table \ref{tab:mappingQW-PP}. The APIs and the application requirements (operations on data) are modeled as facts of the background knowledge. The execution state of a workflow is modeled as fluents and workflow activities as actions.
 
 	\begin{table}
 	   \begin{center}
@@ -49,45 +47,45 @@ The mapping from workflow generation to a planning problem is direct, as shown i
 	         \hline
 	      \end{tabular}
 	   \end{center} 
-	   \caption{Mapping to a planning problem for a workflow}
+	   \caption{Mapping to a planning problem}
 	   \label{tab:mappingQW-PP}
 	\end{table}
 
-Next we show, through a simple example, how we represent the background knowledge for workflow generation. Afterwards, we show how the workflow state and activities are expressed in DLV-K.
+Next we show, through a simple example, how we represent the background knowledge for workflow transformation. Afterwards, we show how the workflow state and activities are expressed in DLV-K.
 
 \subsection{Background knowledge} \label{subsec:kb}
-The background knowledge is the input for workflow generation and it is represented by a set of facts. The facts are two-folded in (1) service interface representation and (2) operations representation.
+The background knowledge is the input for workflow transformation and it is represented by a set of facts of two types: (1) service interface representation and (2) operations representation.
                
 \textbf{Service interface} We characterize service APIs with the following structure
 			
 {\texttt{s\_name:m\_name(B\textsubscript{1}:T\textsubscript{1}?,...,B\textsubscript{m}:T\textsubscript{m}?,F\textsubscript{1}:T'\textsubscript{1}!,...,F\textsubscript{n}:T'\textsubscript{n}!)}}
 
-where the service identified by \texttt{s\_name} has a method named \texttt{m\_name} with \texttt{m} bound parameters, each with an unique name \texttt{B\textsubscript{i}} within the method header and associated with a type \texttt{T\textsubscript{i}}. Analogously there are \texttt{n} free parameters similarly named and typed. Bound and free parameters will be identified by question and exclamation marks, respectively. Consider the following service methods:
+where the service identified by \texttt{s\_name} has a method named \texttt{m\_name} with \texttt{m} bound parameters, each with an unique name \texttt{B\textsubscript{i}} within the method header and associated with a type \texttt{T\textsubscript{i}}. Analogously there are \texttt{n} free parameters similarly named and typed. Bound and free parameters are be identified by question and exclamation marks, respectively. Consider the following service methods
 
 {\footnotesize\texttt{p:profl(str:nickname?,int:age!,str:sex!,str:email!)}}
 
-This method provides the user profile formed by \texttt{age, sex} and \texttt{email} of a given user with a \texttt{nickname}.
+This method provides the profile of a user with a given \texttt{nickname}, which is formed by \texttt{age}, \texttt{sex} and \texttt{email} attributes.
 
 {\footnotesize\texttt{i:interests(str:nickname?,str:tag!,real:score!)}}
 
-This method provides the interests of a given user identified by a \texttt{nickname}. An interest is represented by a \texttt{tag} and has a \texttt{score} that quantifies the interest over the tag.
+This method provides the interests of a user identified by his/her \texttt{nickname}. An interest is represented by a \texttt{tag} and has a \texttt{score} that quantifies the interest over the tag.
 
-The service interface and its methods are described by the facts \texttt{service_interface/1} and \texttt{method/2} respectively. We distinguish between bound and free parameters with the facts \texttt{bound_p/4} and \texttt{free_p/4}. The normal form of a parameter is stated by \texttt{parameter/4} and this rule guarantees that the parameter name is unique in the context of the service method.
+The service interface and its methods are described by the facts \texttt{service_interface/1} and \texttt{method/2}, respectively. We distinguish between bound and free parameters with the facts \texttt{bound_p/4} and \texttt{free_p/4}. The normal form of a parameter is stated by \texttt{parameter/4} and this rule guarantees that the parameter name is unique in the context of the service method.
 
 %\lstinputlisting[lastline=15, fontadjust=true, label=list:service-interfaces,caption={Service interfaces}]{code/service-interfaces-FF.kb}
 
 \lstinputlisting[fontadjust=true, label=list:service-interfaces]{code/service-interfaces-FF.kb}
             
-\textbf{Operations} Now consider the application requirement ``\textit{What are the interests of my friend Joe}'' that is represented by the operation facts:
+\textbf{Operations} Consider the application requirement ``\textit{What are the interests of my friend Joe}'' that is represented by the operation facts
 
 %\lstinputlisting[fontadjust=true, label=list:hybridQuery, caption={Hybrid query in facts}]{code/query-FF1.kb}
 
 \lstinputlisting[fontadjust=true, label=list:hybridQuery]{code/query-FF1.kb}
 
-This requirement expresses the need of data over the methods \texttt{p:profl} and \texttt{i:interests} methods, the nickname of the profile is filtered and correlated with the nickname of interests. Finally, the parameters nickname, score and tag are projected. Observe that the selection over the nickname attribute is indicated only in intention because the equality operators are not significant for the workflow generation.
+This requirement expresses the need of data over the methods \texttt{p:profl} and \texttt{i:interests}, the nickname of the profile is filtered and correlated with the nickname of interests. Finally, the parameters nickname, score and tag are projected. Observe that the selection over the nickname attribute is indicated only in intention because the equality operators are not significant for the workflow search space generation.
 
 \subsection{Workflow activities}
-Workflow activities are represented as actions in DLV-K. In general, the activities are predicates that hold if their facts from background knowledge are true. There are also activities that are independent from facts.
+Workflow activities are represented as actions in DLV-K. In general, the activities are predicates that hold if their facts from the background knowledge are true. There are also activities that are independent from facts.
          
 \textbf{init and finish} These activities have the special purpose to initialize and terminate the workflow execution. Thus their semantics is not associated with the application and there is no dependency with the background knowledge.
 
