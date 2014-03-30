@@ -36,19 +36,19 @@ seq
          par
             seq
                location := l.location()
-               locWin := comp.timeWindow(location, 10)
-	       distSel := comp.funCallSelection(locWin, 
-	          d.distance(lat, lon, 48.85889, 2.29583) < 3.0)
+               locWin := comp.timeWin(location,10)
+	             distSel := comp.funCallSel(locWin, 
+	              d.dist(lat,lon,48.85,2.29)<3.0 )
             endseq
             profile := profile.profile()
          endpar
-         lp := comp.bindJoin(distSel, profile, nickname=nickname)
-         ageSel := comp.selection(lp, age > 21)
+         lp := comp.bindJoin(distSel,profile,nickname=nickname)
+         ageSel := comp.selection(lp,age > 21)
       endseq
       interests := i.interests()
    endpar
-   lip := comp.bindJoin(lp, interests, nickname=nickname)
-   tagSel := comp.selection(lip, tag='art')
+   lip := comp.bindJoin(lp,interests,nickname=nickname)
+   tagSel := comp.selection(lip,tag='art')
    output := comp.output(tagSel)
 endseq
 \end{lstlisting}
@@ -98,7 +98,7 @@ The specification of a time-based window composite service in ASASEL is presente
 
 	\begin{figure*}
    \begin{center}
-      \scalebox{0.875}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
+      \scalebox{0.925}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
    \end{center}
    \caption{Workflow representation of the time-based window}
    \label{fig:timeBasedWindowWF}
