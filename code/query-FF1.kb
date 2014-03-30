@@ -3,5 +3,5 @@ project_(i1,score,s).
 project_(i1,tag,t).
 retrieve_(p,profl,p1).
 retrieve_(i,interests,i1).
-select_(p1,nickname).
+filter_(p1,nickname).
 join_(p1,nickname,i1,nickname).

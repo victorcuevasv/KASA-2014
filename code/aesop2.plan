@@ -4,42 +4,42 @@ connected(DS) requires method(DSN,ON), retrieve_(DSN,ON,DS).
 all_connected.
 retrieved(DS) requires method(DSN,ON), retrieve_(DSN,ON,DS).
 all_retrieved.
-joined(DS1,P1,DS2,P2) requires parameter(DSN1,ON1,P1,_),  retrieve_(DSN1,ON1,DS1),
-                               parameter(DSN2,ON2,P2,_),  retrieve_(DSN2,ON2,DS2),
+joined(DS1,P1,DS2,P2) requires att(DSN1,ON1,P1,_),  retrieve_(DSN1,ON1,DS1),
+                               att(DSN2,ON2,P2,_),  retrieve_(DSN2,ON2,DS2),
                                join_(DS1,P1,DS2,P2).
-selected(DS,P) requires parameter(DSN,ON,P,_), retrieve_(DSN,ON,DS), select_(DS,P).
-all_selected_from(DS) requires retrieve_(DSN,ON,DS).
-all_selected.
+filtered(DS,P) requires att(DSN,ON,P,_), retrieve_(DSN,ON,DS), filter_(DS,P).
+all_filtered_from(DS) requires retrieve_(DSN,ON,DS).
+all_filtered.
 projected(DS,P) requires project_(DS,P,_).
 all_projected_from(DS) requires retrieve_(DSN,ON,DS).
 all_projected.
-query_processed.
+activities_performed.
 delivered.
 finished.
 
 actions:
 init.
 finish.
-on_demand(DS) requires method(DSN,ON), 
+data_service(DS) requires method(DSN,ON), 
    retrieve_(DSN,ON,DS).
 
 
 bind_selection(DS,BP) requires method(DSN,ON),
-   retrieve_(DSN,ON,DS),  bound_p(DSN,ON,BP,_), select_(DS,BP).
+   retrieve_(DSN,ON,DS),  bound_a(DSN,ON,BP,_), filter_(DS,BP).
 
 
 bind_join(DS1,P1,DS2,BP2) requires
    method(DSN1,ON1), retrieve_(DSN1,ON1,DS1),
-   parameter(DSN1,ON1,P1,_), method(DSN2,ON2),
+   att(DSN1,ON1,P1,_), method(DSN2,ON2),
    retrieve_(DSN2,ON2,DS2),
-   bound_p(DSN2,ON2,BP2,_), join_(DS1,P1,DS2,BP2).
+   bound_a(DSN2,ON2,BP2,_), join_(DS1,P1,DS2,BP2).
 
 
 
-select(DS,P) requires method(DSN,ON),
+filter(DS,P) requires method(DSN,ON),
                       retrieve_(DSN,ON,DS),
-                      parameter(DSN,ON,P,_),
-                      select_(DS,P).
+                      att(DSN,ON,P,_),
+                      filter_(DS,P).
 
 project(DS,P) requires project_(DS,P,_).
 
@@ -52,8 +52,8 @@ executable finish if not finished, delivered.
 caused     finished after finish.
 
 
-executable on_demand(DS) if initiated.
-caused     connected(DS) after on_demand(DS).
+executable data_service(DS) if initiated.
+caused     connected(DS) after data_service(DS).
 
 caused -all_connected if not connected(DS).
 caused  all_connected if not -all_connected.
@@ -71,17 +71,17 @@ caused retrieved(DS) if joined(DS1,P1,DS2,P2) after bind_join(DS1,P1,DS2,P2).
 caused -all_retrieved if not retrieved(DS), retrieve_(DSN,ON,DS).
 caused  all_retrieved if not -all_retrieved.
 
-executable select(DS,P) if not
-   selected(DS,P), retrieved(DS), select_(DS,P).
-caused selected(DS,P) after select(DS,P).
-caused -all_selected_from(DS) if not
-   selected(DS,P), select_(DS,P).
-caused  all_selected_from(DS) if not
-   -all_selected_from(DS), retrieved(DS).
+executable filter(DS,P) if not
+   filtered(DS,P), retrieved(DS), filter_(DS,P).
+caused filtered(DS,P) after filter(DS,P).
+caused -all_filtered_from(DS) if not
+   filtered(DS,P), filter_(DS,P).
+caused  all_filtered_from(DS) if not
+   -all_filtered_from(DS), retrieved(DS).
 
-caused -all_selected if -all_selected_from(DS), select_(DS,P).
-caused -all_selected if -all_selected_from(DS), not select_(DS,P), parameter(DSN,ON,P,_), retrieve_(DSN,ON,DS).
-caused  all_selected if not -all_selected.
+caused -all_filtered if -all_filtered_from(DS), filter_(DS,P).
+caused -all_filtered if -all_filtered_from(DS), not filter_(DS,P), att(DSN,ON,P,_), retrieve_(DSN,ON,DS).
+caused  all_filtered if not -all_filtered.
 
 executable project(DS,P) if not projected(DS,P), retrieved(DS), project_(DS,P,_).
 caused     projected(DS,P) after project(DS,P).
@@ -94,13 +94,13 @@ caused -all_projected if -all_projected_from(DS), project_(DS,P,_).
 caused  all_projected if not -all_projected.
 
 	
-caused -query_processed if not all_connected.
-caused -query_processed if not all_retrieved.
-caused -query_processed if not all_selected.
-caused -query_processed if not all_projected.
-caused  query_processed if not -query_processed.
+caused -activities_performed if not all_connected.
+caused -activities_performed if not all_retrieved.
+caused -activities_performed if not all_filtered.
+caused -activities_performed if not all_projected.
+caused  activities_performed if not -activities_performed.
 
-executable output if query_processed, not delivered.
+executable output if activities_performed, not delivered.
 caused    delivered after output.
 
 inertial initiated.
@@ -109,16 +109,16 @@ inertial all_connected.
 inertial retrieved(DS).
 inertial all_retrieved.
 inertial joined(DS1,P1,DS2,P2).
-inertial selected(DS,P).
-inertial all_selected_from(DS).
-inertial -all_selected_from(DS).
-inertial all_selected.
+inertial filtered(DS,P).
+inertial all_filtered_from(DS).
+inertial -all_filtered_from(DS).
+inertial all_filtered.
 inertial projected(DS,P).
 inertial all_projected_from(DS).
 inertial -all_projected_from(DS).
 inertial all_projected.
-inertial -query_processed.
-inertial query_processed.
+inertial -activities_performed.
+inertial activities_performed.
 inertial -delivered.
 inertial delivered.
 inertial finished.
@@ -130,13 +130,13 @@ initially:
        -retrieved(DS).
        -all_retrieved.
        -joined(DS1,P1,DS2,P2).
-       -selected(DS,P).
-       -all_selected_from(DS).
-       -all_selected.
+       -filtered(DS,P).
+       -all_filtered_from(DS).
+       -all_filtered.
        -projected(DS,P).
        -all_projected_from(DS).
        -all_projected.
        -finished.
-       -query_processed.
+       -activities_performed.
 
 goal: finished?(8)

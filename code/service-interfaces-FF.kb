@@ -1,8 +1,8 @@
-service_intereface(p). method(p,profl).
-bound_p(p,profl,nickname,str).
-free_p(p,profl,age,int).
-free_p(p,profl,sex,str).
-free_p(p,profl,email,str).
+method(p,profl).
+bound_a(p,profl,nickname,str).
+free_a(p,profl,age,int).
+free_a(p,profl,sex,str).
+free_a(p,profl,email,str).
 
-parameter(DSN,ON,PN,T):- bound_p(DSN,ON,PN,T).
-parameter(DSN,ON,PN,T):- free_p(DSN,ON,PN,T).
+att(DSN,ON,PN,T):- bound_a(DSN,ON,PN,T).
+att(DSN,ON,PN,T):- free_a(DSN,ON,PN,T).
