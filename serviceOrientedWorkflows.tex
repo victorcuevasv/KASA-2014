@@ -22,12 +22,41 @@ In order to obtain the desired result we need to give to it an executable form, 
 
 \subsection{Workflow Model}\label{subsec:workflowModel}
 
-The workflow is specified textually as an Abstract State Machine (ASM) \cite{Gurevich:1995:EAL:233976.233979}, which can be represented as a series-parallel graph. Such representation of a service coordination corresponding to our example application is given in Figure \ref{fig:servCoorExample}. It includes the location, profile, and interests data services, as well as computation services for various relational operations such as selections, joins, and a time-based window bounding the location stream to recent data (e.g. location notifications obtained within the last 10 minutes).
-		
+The workflow is specified as an Abstract State Machine (ASM) \cite{Gurevich:1995:EAL:233976.233979}, which can be represented as a series-parallel graph. The ASM specification of the service coordination corresponding to our example application is presented in Listing \ref{WorkflowListing}, while its workflow representation is given in Figure \ref{fig:servCoorExample}. It includes the location, profile, and interests data services, as well as computation services for various relational operations such as selections, joins, and a time-based window bounding the location stream to recent data (e.g. location notifications obtained within the last 10 minutes).
+
+\lstdefinelanguage{AbStM}[]{Pascal}{
+   morekeywords={seq, endseq, iterate, skip, par, endpar},
+}
+
+\lstset{language=AbStM,showstringspaces=false}
+\begin{lstlisting}[caption={ASM specification for example application},label=WorkflowListing]
+seq
+   par
+      seq
+         par
+            seq
+               location := l.location()
+               locWin := comp.timeWindow(location, 10)
+	       distSel := comp.funCallSelection(locWin, 
+	          d.distance(lat, lon, 48.85889, 2.29583) < 3.0)
+            endseq
+            profile := profile.profile()
+         endpar
+         lp := comp.bindJoin(distSel, profile, nickname=nickname)
+         ageSel := comp.selection(lp, age > 21)
+      endseq
+      interests := i.interests()
+   endpar
+   lip := comp.bindJoin(lp, interests, nickname=nickname)
+   tagSel := comp.selection(lip, tag='art')
+   output := comp.output(tagSel)
+endseq
+\end{lstlisting}
+
 \begin{figure}
 	\centering
 		\epsfig{file=Images/FriendFinderQueryWF.eps, scale=0.37}
-		\caption{Service-oriented workflow example}
+		\caption{Data-centric workflow for example application}
 		\label{fig:servCoorExample}
 \end{figure}
 
@@ -44,16 +73,6 @@ Concretely, a workflow $W$ is modeled as a directed acyclic graph \textit{W=(V, 
 		\end{center}
 There are three types of vertices: \textit{activities} perform a service method invocation and always have ancestor and descendant vertices, \textit{init} vertices have no ancestors and their only goal is to launch the first \textit{activity} of the workflow, \textit{finish} vertices have no descendants and stop the workflow execution after the last \textit{activity}.
 
-\subsection{Computation services}\label{subsec:computationServices}
-
-Two kinds of computation services form part of our approach: simple computation services and composite computation services specified in the ASASEL language.
-	
-\textbf{Simple computation services}  involve a single service operation invocation to process data. For instance, the distance computation service (see Figure \ref{fig:simpleService}) relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
-
-\textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
-		
-Figure \ref{fig:compositeService} depicts a composite computation service, it evaluates the join operator based on the symmetric hash-join algorithm and two instances of a stateful \texttt{hash-index} service. Several interrelated operation invocations on both service instances, as well as reads and updates on local data items, are used to find the tuple matches that form part of the join result. The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service.
-		
 \begin{figure*}
 	\centering
 		\begin{tabular}{lr}
@@ -65,9 +84,25 @@ Figure \ref{fig:compositeService} depicts a composite computation service, it ev
 		\label{fig:computationServices}
 \end{figure*}
 
-\lstdefinelanguage{AbStM}[]{Pascal}{
-   morekeywords={seq, endseq, iterate, skip},
-}
+\subsection{Computation services}\label{subsec:computationServices}
+
+Two kinds of computation services form part of our approach: simple computation services and composite computation services specified in the ASASEL language.
+	
+\textbf{Simple computation services}  involve a single service operation invocation to process data. For instance, the distance computation service (see Figure \ref{fig:simpleService}) relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
+
+\textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
+		
+Figure \ref{fig:compositeService} depicts a composite computation service, it evaluates the join operator based on the symmetric hash-join algorithm and two instances of a stateful \texttt{hash-index} service. Several interrelated operation invocations on both service instances, as well as reads and updates on local data items, are used to find the tuple matches that form part of the join result.
+
+The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service. Its corresponding workflow representation is depicted in Figure \ref{fig:timeBasedWindowWF}.
+
+	\begin{figure*}
+   \begin{center}
+      \scalebox{0.875}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
+   \end{center}
+   \caption{Workflow representation of the time-based window}
+   \label{fig:timeBasedWindowWF}
+\end{figure*}
 		
 \lstset{language=AbStM,showstringspaces=false}
 \begin{lstlisting}[caption={ASM specification for the time-based window},label=TimeWindowListing]
@@ -93,6 +128,8 @@ if( ctl_state = 'active')
         endseq
   endseq
 \end{lstlisting}
+
+
 
 
 
