@@ -129,6 +129,50 @@ if( ctl_state = 'active')
   endseq
 \end{lstlisting}
 
+\subsection{Workflow graph construction rules}
+
+We now present the construction rules that enable to generate a workflow graph from a given ASM. In the following definition we make the assumption that the vertices representing rules and conditions have annotations that make those vertices unique, whereas the $par$ and $endpar$ vertices of parallel compositions are made unique using labels $l$ that can be generated automatically.
+
+\vspace*{0.25cm}
+\noindent \textbf{ASM workflow graph}. For an ASM $M$, the function \textit{asmwfg} specifies the \textit{ASM workflow graph} such that \textit{asmwfg}$(M) = (V, E, in, out)$, as follows. We use $R$ to represent rules of different types. Due to space restrictions we limit our presentation to the update, parallel composition, and sequential composition rules, in that order.
+
+\begin{equation*}
+	\text{if $R = \ f := g(t_1,...,t_n)$ then}
+	\begin{cases}
+			\text{$V = \{R, in, out\}$}\\
+			\text{$E = \{(in, R), (R, out)\}$}\\
+			\text{$in$, $out$ are new vertices}\\
+	\end{cases}
+\end{equation*}
+
+\begin{equation*}
+	\text{if $R = \ \textbf{par} R_1 ... R_n \textbf{endpar}$ then}
+	\begin{cases}
+			\text{Let \textit{asmwfg}$(R_i) = (V_i, E_i, in_i, out_i)$, for all $i \in [1..n]$}\\
+			\text{$V = (V_1 - \{out_1\}) \cup \bigcup \limits_{j=2}^{n-1}{(V_j - (\{in_j, out_j\}))}$}\\
+			\text{$\cup \ (V_n - \{in_n\}) \cup  \{par_l, endpar_l\}$}\\
+			\text{$E = \{(in_1, par_l), (endpar_l, out_n)\}$}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{E_j - \{(in_j, v_j), (v_j', out_j) | v_j, v_j' \in V_j\}} $}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{\{(par_l, v_j) | (in_j, v_j) \in E_j\}} $}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{\{(v_j', endpar_l) | (v_j', out_j) \in E_j\}} $}\\
+			\text{$par_l$, $endpar_l$ are new vertices defined with the label $l$}\\
+			\text{also $in = in_1$ and $out = out_2$;}\\
+	\end{cases}
+\end{equation*}
+
+\begin{equation*}
+	\text{if $R = \ \textbf{seq} R_1 ... R_n \textbf{endseq}$ then}
+	\begin{cases}
+			\text{Let \textit{asmwfg}$(R_i) = (V_i, E_i, in_i, out_i)$, for all $i \in [1..n]$}\\
+			\text{$V = (V_1 - \{out_1\}) \cup \bigcup \limits_{j=2}^{n-1}{(V_j - (\{in_j, out_j\}))}$}\\
+			\text{$\cup \ (V_n - \{in_n\})$}\\
+			\text{$E = \{(in_1, v_1) | (in_1, v_1) \in E_1\} \cup \{(v_n, out_n) | (v_n, out_n) \in E_n\}$}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{E_j - \{(in_j, v_j), (v_j', out_j) | v_j, v_j' \in V_j\}} $}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n-1}{\{(v_j, v_{j+1}') | (v_j, out_j) \in E_j, (in_{j+1}, v_{j+1}') \in E_{j+1}\}} $}\\
+			\text{where $in = in_1$ and $out = out_n$;}\\
+	\end{cases}
+\end{equation*}
+
 
 
 
