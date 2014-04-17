@@ -73,36 +73,23 @@ Concretely, a workflow $W$ is modeled as a directed acyclic graph \textit{W=(V, 
 		\end{center}
 There are three types of vertices: \textit{activities} perform a service method invocation and always have ancestor and descendant vertices, \textit{init} vertices have no ancestors and their only goal is to launch the first \textit{activity} of the workflow, \textit{finish} vertices have no descendants and stop the workflow execution after the last \textit{activity}.
 
-\begin{figure*}
-	\centering
-		\begin{tabular}{lr}
-				\subfloat[Simple service]{\epsfig{file=Images/Simple.pdf, scale=0.2}\label{fig:simpleService}}
-				&
-				\subfloat[Composite service]{\epsfig{file=Images/Composite.pdf, scale=0.2}\label{fig:compositeService}}			
-		\end{tabular}
-		\caption{Computation services}
-		\label{fig:computationServices}
-\end{figure*}
-
 \subsection{Computation services}\label{subsec:computationServices}
 
 Two kinds of computation services form part of our approach: simple computation services and composite computation services specified in the ASASEL language.
-	
-\textbf{Simple computation services}  involve a single service operation invocation to process data. For instance, the distance computation service (see Figure \ref{fig:simpleService}) relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
 
-\textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
-		
-Figure \ref{fig:compositeService} depicts a composite computation service, it evaluates the join operator based on the symmetric hash-join algorithm and two instances of a stateful \texttt{hash-index} service. Several interrelated operation invocations on both service instances, as well as reads and updates on local data items, are used to find the tuple matches that form part of the join result.
-
-The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service. Its corresponding workflow representation is depicted in Figure \ref{fig:timeBasedWindowWF}.
-
-	\begin{figure*}
+\begin{figure*}
    \begin{center}
       \scalebox{0.925}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
    \end{center}
    \caption{Workflow representation of the time-based window}
    \label{fig:timeBasedWindowWF}
 \end{figure*}
+
+\textbf{Simple computation services}  involve a single service operation invocation to process data. For instance, a distance computation service that relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
+
+\textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
+		
+The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service. Its corresponding workflow representation is depicted in Figure \ref{fig:timeBasedWindowWF}.
 		
 \lstset{language=AbStM,showstringspaces=false}
 \begin{lstlisting}[caption={ASM specification for the time-based window},label=TimeWindowListing]
