@@ -35,7 +35,7 @@ Carlos-Manuel L\'opez-Enr\'iquez\inst{2} \and V\'ictor Cuevas-Vicentt\'in\inst{3
 \institute{
 CNRS \and Grenoble Institute of Technology\\ BP. 72, 38402, Saint Martin d'H\`{e}res Cedex, France\\
 \and
-University of California at Davis\\ Department of Computer Science\\ One Shields Avenue, Davis CA 95616, USA\\ 
+University of California at Davis\\ One Shields Avenue, Davis CA 95616, USA\\ 
 \and
 Exhacienda Sta. Catarina M\'{a}rtir s/n 72820 \\ San Andr\'{e}s Cholula, Puebla, Mexico \\
 \email{carlos.manuel.lopez@gmail.com},\email{victorcuevasv@gmail.com},\email{genoveva.vargas@gmail.com},\\
@@ -47,7 +47,7 @@ Exhacienda Sta. Catarina M\'{a}rtir s/n 72820 \\ San Andr\'{e}s Cholula, Puebla,
 
 \begin{abstract}
 
-This paper presents our approach for specifying, transforming, and enacting data-centric workflows in a service-oriented environment. First, we propose ASASEL (Abstract State Machines Execution Language) a language and system based on the ASM formalism for specifying workflows consisting of on-demand and streaming data services that produce data, which are then processed by simple and composite computation services. Second, we present our initial characterization of a planning-based approach for the transformation of workflows. According to this approach, a search space of equivalent workflows that satisfy the same functional requirements but differ in respect to quality of service criteria represented by a goal is generated. In particular, we address the exploration of parallelism trough the workflow structure. Together, our language and enactment engine along with our transformation approach provide the foundation for a highly flexible mechanism for managing data-centric workflows, and which can also be adapted to other domains such as business processes or eScience.
+This paper presents our approach for specifying, transforming, and enacting data-centric workflows in a service-oriented environment. First, we propose ASASEL (Abstract State Machines Execution Language) a language and system based on the ASM formalism for specifying workflows consisting of on-demand and streaming data services that produce data, which are then processed by simple and composite computation services as well as by operations on complex values. Second, we present our initial characterization of a planning-based approach for the transformation of workflows. In particular, we address the exploration of parallelism through the workflow structure. Together, our language and enactment engine along with our transformation approach provide the foundation for a highly flexible mechanism for managing data-centric workflows, and which can also be adapted to other domains such as business processes or eScience.
 
 \keywords{workflows, services, answer set planning, logic programming}
 \end{abstract}
@@ -55,11 +55,11 @@ This paper presents our approach for specifying, transforming, and enacting data
 
 \input{introduction.tex}
 
-\input{serviceOrientedWorkflows.tex}
+\input{dataCentricWorkflows.tex}
 
-\input{dataModel.tex}
+\input{complexValuesDataModel.tex}
 
-\input{workflowGeneration.tex}
+\input{workflowTransformation.tex}
 
 \input{experiments.tex}
 
@@ -67,7 +67,7 @@ This paper presents our approach for specifying, transforming, and enacting data
 
 \input{relatedWork.tex}
 
-\input{conclusionsAndFutureWork.tex}
+\input{conclusions.tex}
 
 
 %}
