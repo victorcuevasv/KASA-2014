@@ -63,13 +63,13 @@ The background knowledge contains a set of facts that serve as the input for the
 %\lstinputlisting[lastline=15, fontadjust=true, label=list:service-interfaces,caption={Service interfaces}]{code/service-interfaces-FF.kb}
 
 \lstinputlisting[fontadjust=true, label=list:service-interfaces]{code/service-interfaces-FF.kb}
-            
+\vspace*{0.25cm}
 \textbf{Required activities} are derived from the ASASEL workflow specification and represented through facts (with the underscore at the end). The required activities derived from a workflow implementing ``\textit{What are the interests of my friend Joe}'' are represented by the following facts. 
 
 %\lstinputlisting[fontadjust=true, label=list:hybridQuery, caption={Hybrid query in facts}]{code/query-FF1.kb}
 
 \lstinputlisting[fontadjust=true, label=list:hybridQuery]{code/query-FF1.kb}
-
+\vspace*{0.25cm}
 These required activities express the need over the methods \texttt{p:profl} and \texttt{i:interests}. Both data are retrieved by \texttt{retrive\_/3} and represented by \texttt{p1} and \texttt{i1}. The nickname attribute of the profile is filtered by \texttt{filter\_/2} and correlated by \texttt{join\_/4} interests through the nickname attribute. The attributes nickname, score and tag are projected. Observe that the filter over the nickname attribute is only indicated as the equality operators are not relevant for the workflow transformation.
 
 \subsection{Workflow activities}
@@ -82,31 +82,31 @@ Workflow activities are represented as actions in DLV-K. Such actions are predic
 %\lstinputlisting[firstline=23, lastline=23, fontadjust=false, label=list:qw-on-demand, caption={on-demand activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=23, lastline=24, fontadjust=false, label=list:qw-on-demand]{code/aesop2.plan}
-
+\vspace*{0.25cm}
 \textbf{bind\_selection} invokes a service method and retrieves data from it. The invocation is done by providing a bound attribute. 
 
 %\lstinputlisting[firstline=26, lastline=27, fontadjust=false, label=list:qw-bind-selection, caption={bind-selection activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=27, lastline=28, fontadjust=false, label=list:qw-bind-selection]{code/aesop2.plan}
-
+\vspace*{0.25cm}
 \textbf{bind_join} correlates data from two service methods w.r.t. an attribute from each one. The attribute from the outer method must be bound. This activity is analogous to \texttt{bind_selection} but it takes the value from another method attribute.
                      
 %\lstinputlisting[firstline=30, lastline=35, fontadjust=false, label=list:qw-bind-join, caption={bind-join activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=31, lastline=35, fontadjust=false, label=list:qw-bind-join]{code/aesop2.plan}
-                     
+\vspace*{0.25cm}           
 \textbf{filter} performs the filtering over an attribute of a required service method.
             
 %\lstinputlisting[firstline=39, lastline=42, fontadjust=false, label=list:qw-select, caption={select activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=39, lastline=42, fontadjust=false, label=list:qw-select]{code/aesop.plan}
-                     
+\vspace*{0.25cm}                
 \textbf{project} projects an attribute of a service method.
                      
 %\lstinputlisting[firstline=44, lastline=44, fontadjust=false, label=list:qw-project, caption={project activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=44, lastline=44, fontadjust=false, label=list:qw-project]{code/aesop.plan}
-				   
+\vspace*{0.25cm}			   
 The semantics of these activities is completed with constraints that define their pre-conditions and post-conditions.
 				
 \subsection{Workflow constraints} 
@@ -119,62 +119,62 @@ In the following, we present the intuition of these constraints along with their
 %\lstinputlisting[firstline=49, lastline=52, fontadjust=false, label=list:init-activity, caption={\texttt{init} and \texttt{finish} activities}]{code/aesop.plan}
 
 \lstinputlisting[firstline=49, lastline=52, fontadjust=false, label=list:init-activity]{code/aesop.plan}
-                   
+\vspace*{0.25cm}        
 \textbf{data\_service} Once initiated the workflow, the data services must be \texttt{connected(DS)}. This fluent is produced by the execution of the \texttt{data\_service(DS)} activity. 
 
 %\lstinputlisting[firstline=55, lastline=56, fontadjust=false, label=list:on-demand-activity, caption={on-demand activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=55, lastline=56, fontadjust=false, label=list:on-demand-activity]{code/aesop.plan}
-
+\vspace*{0.25cm}
 In order to retrieve all the required data, all data services should be connected. The fluent \texttt{all_connected} that is false if there is not evidence that a data service is connected. Otherwise, it is true.
 
 %\lstinputlisting[firstline=58, lastline=59, fontadjust=false, label=list:all-connected-fluent, caption={all\_connected fluent}]{code/aesop.plan}
 
 \lstinputlisting[firstline=58, lastline=59, fontadjust=false, label=list:all-connected-fluent]{code/aesop.plan}
-     
+\vspace*{0.25cm}
 \textbf{bind_selection} It is only executable if there is not evidence that data from the data service \texttt{DS} have been retrieved and if there is a connection with \texttt{DS}. Once the bind selection is executed, the fluent \texttt{retrieved(DS)} is true. 
 
       
 %\lstinputlisting[firstline=61, lastline=63, fontadjust=false, label=list:bind-selection-activity, caption={bind\_ selection activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=61, lastline=63, fontadjust=false, label=list:bind-selection-activity]{code/aesop.plan}
-
+\vspace*{0.25cm}
 \textbf{filter} It is executable if there is not evidence that the attribute \texttt{P} of \texttt{DS} has been filtered. It is required that the data from \texttt{DS} have been retrieved and the activity \texttt{select_(DS,P)} must be required. The execution of the filter makes the fluent \texttt{filtered(DS,P)} true.
 
 %\lstinputlisting[firstline=74, lastline=76, fontadjust=false, label=list:select-activity, caption={select activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=74, lastline=76, fontadjust=false, label=list:select-activity]{code/aesop2.plan}
-
+\vspace*{0.25cm}
 As might several filter activities over \texttt{DS} are required, the \texttt{all_filtered_from} becomes true if there is no other attribute pending to be filtere.
 
 %\lstinputlisting[firstline=77, lastline=78, fontadjust=false, label=list:all-selected-from, caption={all\_select\_from fluent}]{code/aesop.plan}
 
 \lstinputlisting[firstline=77, lastline=80, fontadjust=false, label=list:all-selected-from]{code/aesop2.plan}
-
+\vspace*{0.25cm}
 There is the fluent \texttt{all\_filtered} that becomes true if there is no other attribute of the method \texttt{DS} pending to be filtered.
 
 %\lstinputlisting[firstline=80, lastline=82, fontadjust=false, label=list:all-selected, caption={all\_select fluent}]{code/aesop.plan}
 
 \lstinputlisting[firstline=80, lastline=82, fontadjust=false, label=list:all-selected]{code/aesop.plan}
-
+\vspace*{0.25cm}
 \textbf{project} This activity is executable if there is not evidence that the attribute \texttt{P} of \texttt{DS} has been projected. The execution of projection makes the fluent \texttt{projected} true.
                
 %\lstinputlisting[firstline=84, lastline=85, fontadjust=false, label=list:project, caption={project activity}]{code/aesop.plan}
 
 \lstinputlisting[firstline=84, lastline=85, fontadjust=false, label=list:project]{code/aesop.plan}
-
+\vspace*{0.25cm}
 During the workflow execution, all the projection activities have to been performed. For the method \texttt{DS}, the fluent \texttt{all\_projected\_from} is true if there is no other attribute from \texttt{DS} pending to be projected. The fluent \texttt{all\_projected} is true if there is no other \texttt{DS} with an attribute pending to be projected.
                 
 %\lstinputlisting[firstline=88, lastline=92, fontadjust=false, label=list:all-projected-from, caption={all\_projected\_from fluent}]{code/aesop.plan}
 
 \lstinputlisting[firstline=88, lastline=94, fontadjust=false, label=list:all-projected-from]{code/aesop.plan}
-                    
+\vspace*{0.25cm}                  
 \textbf{output} Once all the required activities are performed, the result is delivered by the activity \texttt{output}. To model this pre-condition, the fluent \texttt{activities\_performed} is true if all the required activities have been processed. Otherwise, the fluent is false \texttt{-activities\_performed}.
 
 %\lstinputlisting[firstline=95, lastline=99, fontadjust=false, label=list:query-processed, caption={query\_processed fluent}]{code/aesop.plan}
 
 \lstinputlisting[firstline=95, lastline=99, fontadjust=false, label=list:query-processed]{code/aesop.plan}
-
+\vspace*{0.25cm}
 Once the result is delivered by \texttt{output}, the fluent \texttt{delivered} becomes true and the workflow can be finished (\cf{} \texttt{finish} pre-conditions).
 
 %\lstinputlisting[firstline=101, lastline=102, fontadjust=false, label=list:output, caption={output fluent}]{code/aesop.plan}

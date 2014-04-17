@@ -1,0 +1,14 @@
+set terminal pdfcairo
+set out 'searchspace.pdf'
+#set title "Search Space Growth" 
+set xlabel "length" 
+set ylabel "search space"
+set logscale y
+set key left top
+set xtics ("6" 1, "7" 2, "8" 3, "9" 4, "10" 5, "11" 6, "12" 7, "13" 8, "14" 9)  
+set pointsize 2
+set style line 1 pt 8 ps 1.5 lt 1 lw 1 lc rgb "black"
+plot "searchspace.dat" using 1:3 with linespoints t "W1" ls 1 pt 8, \
+"searchspace.dat" using 1:4 with linespoints t "W2" ls 1 pt 17, \
+"searchspace.dat" using 1:5 with linespoints t "W3" ls 1 pt 19, \
+"searchspace.dat" using 1:6 with linespoints t "W4" ls 1 pt 16
