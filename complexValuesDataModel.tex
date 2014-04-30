@@ -1,0 +1,131 @@
+
+\section{Complex Values Data Model}\label{sec:complexValuesDataModel}
+
+Our workflow model is complemented by a data model consisting of complex values and operations to flexibly manipulate them. Due to space restrictions we only specify two representative operators while the full specification and semantics of the model is given in \cite{vcv}. Concretely, we first define complex values and then present a recursive operator and a nesting operator over them.
+
+The set $\mathbf{T}$ of all complex value types over a set $\mathbb{A}$ of type names is defined inductively as follows.
+
+\begin{enumerate}
+	\item if $D$ is a domain, then $A:D$ is an atomic type named $A$, where $A \in \mathbb{A}$;
+	\item if $\hat{t}$ is a type, then $A:\{\hat{t}\}$ is a set type named $A$;
+	\item if $\hat{t}_1, ..., \hat{t}_n$ are types with distinct names, then $A:\langle \hat{t}_1, ..., \hat{t}_n \rangle$ is a tuple type named $A$ and each $\hat{t}_i$ is an attribute type.
+\end{enumerate}
+
+\subsection{Recursive complex value operators}
+
+Inspired in the traditional relational operators, they apply to complex values in a recursive manner; meaning that through an expression it is possible to apply the operator to structures nested within a complex value. In particular, we present next the specification of the projection operator.
+
+\vspace*{0.25cm}
+\textbf{Projection} Enables to retrieve certain data elements in a complex value instance. Such data elements may be nested and multivalued. The data elements to retrieve are specified in a (possibly recursive) projection expression $\pi_{exp}$, which is applied to the input complex value instance \textit{s}.
+
+\begin{itemize}
+	\item \textit{Notation}: $\ \pi_{exp}(s)$
+	
+	Projection expressions $\pi_{exp}$ are constructed as follows, we use $A$ to represent type names that occur in the complex value instance
+
+	\vspace{0.2cm}
+   	\noindent \hspace*{1.5cm} $\pi_{exp}$ \hspace*{0.25cm} $\ \ ::= \ \ \pi \ ( \ list \ ) \ \ $ \\
+   	\noindent \hspace*{1.5cm} $list$ \hspace*{0.26cm} $\ \ ::= \ \ term \ \ | \ \ term \ , \ list \ \ $ \\
+   	\noindent \hspace*{1.5cm} $term$ \hspace*{0.0cm} $\ \ ::= \ \ A \ \ | \ \ \pi_{exp} \ \ $ \\
+	\vspace{0.2cm}
+	
+	\item \textit{Operation type}:
+	$\ \pi:\hat{t} \rightarrow \hat{t'}$, where $\hat{t'}$ is defined below
+	
+	\item \textit{Semantics}: $\pi_{exp}(s)$ is defined as follows.
+	
+	First, we define the function $eval(A:v, L)$, where $A:v$ is a tuple complex value of the form
+	$A:\langle ...,A':v',... \rangle$ and $L$ an expression term (as defined by the notation third rule above).
+	
+	\begin{enumerate}
+		\item If $L$ is of the form $A'$ then $eval(A:v, L)=A':v'$
+		\item If $L$ is of the form $\pi(A', L_1',...,L_n')$ then $eval(A:v, L) = \pi(A', L_1',...,L_n')(A':v')$
+	\end{enumerate}
+
+	The value of $\pi_{exp}(s)$ is then given by
+
+	\begin{enumerate}
+		\item If $s = A:\langle A_1:v_1,...,A_n:v_n \rangle = A:v$, i.e. $s$ is a tuple complex value, and $\pi_{exp} = \pi(A, L_1,...,L_n)$, then \\
+					\hspace{1.5cm}$\pi_{exp}(s) = A:\langle eval(A:v, L_1),...,eval(A:v, L_n) \rangle$ and \\
+					\hspace{1.5cm}$\hat{t'}$ is $A:\langle type(eval(A:v, L_1)),...,type(eval(A:v, L_n)) \rangle$
+		\item If $s = A:\{ A':v_1,...,A':v_m \}$, i.e. $s$ is a set complex value, and $\pi_{exp} = \pi(A, \pi_{exp'})$ with $\pi_{exp'}$ of the form $\pi(A', L_1',...,L_n')$, then \\
+     			\hspace{1.5cm}$\pi_{exp}(s) = A:\{ \pi_{exp'}(A':v_i) | A':v_i \in val(s) \} $ and \\
+					\hspace{1.5cm}$\hat{t'}$ is $A:\{type(\pi_{exp'}(A':v_j))\}$ for an arbitrary $A':v_j \in val(s)$
+	\end{enumerate}
+
+\end{itemize}
+
+\noindent Consider the following complex value
+
+\vspace*{0.25cm}
+\noindent \textit{s = person:$\langle$ sex:`M', nick:`Charles', email:`charles@gmail.com', age:40,}
+
+\hspace*{1.0cm} \textit{interests:$\{$stag:$\langle$ tag:`art', score:6.5 $\rangle$, stag:$\langle$ tag:`sports', score:7.5 $\rangle \} \rangle$}
+
+\vspace*{0.25cm}
+\noindent The expression $\pi(person, nick, age, \pi(interests, \pi(stag, score)))(s)$ produces the value
+
+\vspace*{0.25cm}
+\noindent \textit{$ \ $person:$\langle$ nick:`Charles', age:40,}\hspace*{0.0cm}\textit{interests:$\{$stag:$\langle$ score:6.5 $\rangle$, stag:$\langle$score:7.5 $\rangle \} \rangle \ $}
+
+\subsection{Nesting and unnesting operations}
+
+These operators take into consideration common values occurring in several tuples, therefore facilitating grouping or ungrouping them (which gives the operators their names). The specification of the group operator is presented next.
+
+\vspace*{0.25cm}
+\noindent \textbf{Group}. Intuitively, grouping a set of tuple complex values $R$ over a set of attributes $X$ implies aggregating the tuples that are equal in all attributes except those in $X$ to create a single tuple, which will contain a new set attribute with new tuples containing all of the $X$-values of the aggregated input tuples. This set attribute is given a new name, as are the tuples built from the $X$ attributes that are contained in it; both of which are specified in the group expression.
+
+\begin{itemize}
+	\item \textit{Notation}: $\ group_{exp}(R)$
+
+	Group expressions $exp$ are constructed as follows, we use $A$ to represent the type names that occur in the complex value instances,
+	and $B$ and $B'$ to represent the new names of the grouped tuples set and its constituent tuples, respectively
+
+	\vspace{0.2cm}
+   	\noindent \hspace*{1.5cm} $exp$ \hspace*{0.25cm} $\ \ ::= \ \ group \ ( A,\ B:list \ [B'] \ ) \ \ $ \\
+   	\noindent \hspace*{1.5cm} $list$ \hspace*{0.26cm} $\ \ ::= \ \ A \ \ | \ \ A \ , \ list \ \ $
+	\vspace{0.2cm}
+	
+	\item \textit{Operation type}:
+	
+	$group: \ \{A:\langle \hat{a}_1,...,\hat{a}_m,\hat{b}_1,...,\hat{b}_n \rangle\} \rightarrow 
+	\{A:\langle \hat{a}_1,...,\hat{a}_m, B:\{B':\langle \hat{b}_1,...,\hat{b}_n \rangle \} \rangle\}$
+	
+	\item \textit{Semantics}:
+	
+	$group_{exp}(R)= \\
+	\{ A:\langle A_1:v_1,...,A_m:v_m, B:w \rangle \ | \ ( \\
+	\hspace*{0.2cm}\exists t \in R \ | \ \forall_{i|1 \leq i \leq m} \ t.A_i = v_i \wedge w=\\
+	\hspace*{0.2cm}\{ B':\langle B_1:u_1,...,B_n:u_n \rangle | A:\langle A_1:v'_1,...,A_m:v'_m, B_1:u_1,...,B_n:u_n \rangle \\
+	\hspace*{0.2cm}\{ B':\langle B_1:u_1,...,B_n:u_n \rangle | A:\langle A_1:v'_1,...,A_m:v'_m, B_1:u_1,...,B_n:u_n \rangle \\
+	\hspace*{0.2cm}\in R \wedge \forall_{i|1 \leq i \leq m} \ t.A_i = v'_i \} \\
+	) \ \}$
+	
+	where all values $A_i:v_i$ and $A_i:v'_i$ are of type $\hat{a}_i$ and all values $B_i:u_i$ are of type $\hat{b}_i$.
+
+\end{itemize}
+
+Consider the following set of tuple complex values
+
+\vspace*{0.25cm}
+	\noindent \hspace*{0.5cm} \textit{$R=\{$ \ person:$\langle$ nickname:`Bob', tag:`sports', score:6.5 $\rangle$}	\\
+	\hspace*{1.5cm} \textit{person:$\langle$ nickname:`Bob', tag:`cars', score:8.0 $\rangle$}	\\
+	\hspace*{1.5cm} \textit{person:$\langle$ nickname:`Alice', tag:`fashion', score:7.0 $\rangle$}	\\
+	\hspace*{1.5cm} \textit{person:$\langle$ nickname:`Alice', tag:`novels', score:8.5 $\rangle$ \ $\}$ }
+
+\vspace*{0.25cm}
+The expression $group(person, interests:tag, score[s\_tag])(R)$ thus yields:
+
+\vspace{0.25cm}
+	\noindent \hspace*{0.5cm} \textit{$R'=\{$ person:$\langle$ nickname:`Bob',}	\\
+	\hspace*{2.3cm} \textit{interests:$\{$s\_tag:$\langle$ tag:`sports', score:6.5 $\rangle$,} \\
+	\hspace*{3.9cm} \textit{s\_tag:$\langle$tag:`cars', score:8.0 $\rangle$ $\}$,} \\
+	\hspace*{1.7cm} \textit{person:$\langle$ nickname:`Alice',}	\\
+	\hspace*{2.3cm} \textit{interests:$\{$s\_tag:$\langle$ tag:`fashion', score:7.0 $\rangle$,} \\
+	\hspace*{3.9cm} \textit{s\_tag:$\langle$tag:`novels', score:8.5 $\rangle$ $\} \ \}$}
+
+
+
+
+
+

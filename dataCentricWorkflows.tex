@@ -1,0 +1,170 @@
+
+\section{Data-Centric Workflows}\label{sec:dataCentricWorkflows}
+
+We introduce our approach with a prototypical Friend Finder application, although our approach can be applied to a broader range of applications. Consider a scenario in which multiple users are in an urban area carrying GPS-enabled mobile devices that periodically transmit their location; furthermore, they have agreed to share some of their personal information. A user in this scenario may want to \textit{Find friends recently located no more than 3 km away from me, which are over 21 years old and that are interested in art}.
+
+Data services produce data in one of two ways: on-demand in response to a given request, or continuously as a data stream. In either case, the data service exposes an interface, composed of several operations and supported by standardized protocols. The JavaScript Object Notation is used to represent the data. Accordingly, objects are built from atomic values, nested tuples, and lists.
+
+For instance, in our scenario the users' location is available by a stream data service with the interface
+	
+$\mathtt{subscribe() \rightarrow \lceil location:\langle nickname, coor\rangle\rceil}$
+	
+\noindent consisting of a subscription operation that after invocation will produce a stream of location tuples, each with a nickname that identifies the user and his/her coordinates. The rest of the data is produced by the next two on-demand data services, each represented by a single operation
+	
+$\mathtt{profile(nickname) \rightarrow person:\langle age, sex, email\rangle}$
+\\
+\hspace*{0.50cm}$\mathtt{interests(nickname) \rightarrow \left[s\_tag:\langle tag, score\rangle\right]}$
+
+The first provides a single person tuple denoting a profile of the user, once given a request represented by her nickname. The second produces, given the nickname as well, a list of s\_tag tuples denoting the interests of the user by scored tags (\eg{} 'music' with 8.5).
+	
+In order to obtain the desired result we need to give to it an executable form, in our case a workflow of activities implementing a service coordination. Workflows are built by the parallel and sequential composition of activities that are bound to data and computation services; the first provide the data, while the latter process them as required.
+
+\subsection{Workflow Model}\label{subsec:workflowModel}
+
+The workflow is specified as an Abstract State Machine (ASM) \cite{Gurevich:1995:EAL:233976.233979}, which can be represented as a series-parallel graph. The ASM specification of the service coordination corresponding to our example application is presented in Listing \ref{WorkflowListing}, while its workflow representation is given in Figure \ref{fig:servCoorExample}. It includes the location, profile, and interests data services, as well as computation services for various relational operations such as selections, joins, and a time-based window bounding the location stream to recent data (e.g. location notifications obtained within the last 10 minutes).
+
+\lstdefinelanguage{AbStM}[]{Pascal}{
+   morekeywords={seq, endseq, iterate, skip, par, endpar},
+}
+
+\lstset{language=AbStM,showstringspaces=false}
+\begin{lstlisting}[caption={ASM specification for example application},label=WorkflowListing]
+seq
+   par
+      seq
+         par
+            seq
+               location := l.location()
+               locWin := comp.timeWin(location,10)
+	             distSel := comp.funCallSel(locWin, 
+	              d.dist(lat,lon,48.85,2.29)<3.0 )
+            endseq
+            profile := profile.profile()
+         endpar
+         lp := comp.bindJoin(distSel,profile,nickname=nickname)
+         ageSel := comp.selection(lp,age > 21)
+      endseq
+      interests := i.interests()
+   endpar
+   lip := comp.bindJoin(lp,interests,nickname=nickname)
+   tagSel := comp.selection(lip,tag='art')
+   output := comp.output(tagSel)
+endseq
+\end{lstlisting}
+
+\begin{figure}
+	\centering
+		\epsfig{file=Images/FriendFinderQueryWF.pdf, scale=0.47}
+		\caption{Data-centric workflow for example application}
+		\label{fig:servCoorExample}
+\end{figure}
+
+A workflow $W$ is modeled as a directed acyclic graph $W=(V, E, in, out, A, C)$ where:
+		\begin{center}
+			\footnotesize
+			\begin{tabular}{rp{7.5cm}}
+				$V$                      & is a set of vertices \\
+				$E \subseteq V \times V$ & is a set of edges \\
+				$A \subseteq V$          & is a set of activities \\
+				$\{in, out\} \subseteq A$     & are the initial and final activities of $W$\\
+				$C \subseteq V$          & is a set of composition operators $\{par_1,...,par_n\}$\\.     
+			\end{tabular}   
+		\end{center}
+There are three types of vertices: \textit{activities} perform a service method invocation and always have ancestor and descendant vertices, \textit{in} vertices have no ancestors and their only goal is to launch the first \textit{activity} of the workflow, \textit{out} vertices have no descendants and stop the workflow execution after the last \textit{activity}.
+
+A series of construction rules enable to generate a workflow graph from a given ASM. Next, we assume that the vertices representing rules have annotations making them unique, whereas the $par$ and $endpar$ vertices of parallel compositions are made unique using automatically generated labels $l$.
+
+For an ASM $M$, the function \textit{asmwfg} specifies the \textit{workflow graph} such that \textit{asmwfg}$(M) = (V, E, in, out, A, C)$, as follows. We use $R$ to represent rules of different types. Due to space restrictions we limit our presentation to the update, parallel composition, and sequential composition rules, in that order. The full rules including conditionals and iteration are presented in \cite{vcv}.
+
+\begin{enumerate}
+\item \text{if $R = \ f := g(t_1,...,t_n)$ then}\\
+			\text{$V = \{R, in, out\}$},
+			\text{$A = \{R\}$},
+			\text{$E = \{(in, R), (R, out)\}$};
+			\text{$in$, $out$ are new vertices}\\
+
+\item	\text{if $R = \ \textbf{par} R_1 ... R_n \textbf{endpar}$ then}\\
+			\text{Let \textit{asmwfg}$(R_i) = (V_i, E_i, in_i, out_i, A_i, C_i)$, for all $i \in [1..n]$}\\
+			\text{$V = (V_1 - \{out_1\}) \cup \bigcup \limits_{j=2}^{n-1}{(V_j - (\{in_j, out_j\}))}$}
+			\text{$\cup \ (V_n - \{in_n\}) \cup  \{par_l, endpar_l\}$}\\
+			\text{$A = \bigcup \limits_{j=1}^{n}{A_j}$},
+			\text{$C = \bigcup \limits_{j=1}^{n}{C_j} \cup \{par_l, endpar_l\}$}\\
+			\text{$E = \{(in_1, par_l), (endpar_l, out_n)\}$}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{E_j - \{(in_j, v_j), (v_j', out_j) | v_j, v_j' \in V_j\}} $}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{\{(par_l, v_j) | (in_j, v_j) \in E_j\}} $}
+			\text{$\cup \bigcup \limits_{j=1}^{n}{\{(v_j', endpar_l) | (v_j', out_j) \in E_j\}} $}\\
+			\text{$par_l$, $endpar_l$ are new vertices with label $l$}\\
+			\text{also $in = in_1$ and $out = out_n$;}\\
+
+\item \text{if $R = \ \textbf{seq} R_1 ... R_n \textbf{endseq}$ then}\\
+			\text{Let \textit{asmwfg}$(R_i) = (V_i, E_i, in_i, out_i, A_i, C_i)$, for all $i \in [1..n]$}\\
+			\text{$V = (V_1 - \{out_1\}) \cup \bigcup \limits_{j=2}^{n-1}{(V_j - (\{in_j, out_j\}))}$}
+			\text{$\cup \ (V_n - \{in_n\})$}\\
+			\text{$A = \bigcup \limits_{j=1}^{n}{A_j}$},
+			\text{$C = \bigcup \limits_{j=1}^{n}{C_j}$}\\
+			\text{$E = \{(in_1, v_1) | (in_1, v_1) \in E_1\} \cup \{(v_n, out_n) | (v_n, out_n) \in E_n\}$}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n}{E_j - \{(in_j, v_j), (v_j', out_j) | v_j, v_j' \in V_j\}} $}\\
+			\text{$\cup \bigcup \limits_{j=1}^{n-1}{\{(v_j, v_{j+1}') | (v_j, out_j) \in E_j, (in_{j+1}, v_{j+1}') \in E_{j+1}\}} $}\\
+			\text{where $in = in_1$ and $out = out_n$;}\\
+\end{enumerate}
+
+\subsection{Computation services}\label{subsec:computationServices}
+
+Two kinds of computation services form part of our approach: simple computation services and composite computation services specified in the ASASEL language.
+
+\begin{figure*}
+   \begin{center}
+      \scalebox{0.875}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
+   \end{center}
+   \caption{Workflow representation of the time-based window}
+   \label{fig:timeBasedWindowWF}
+\end{figure*}
+
+\textbf{Simple computation services}  involve a single service operation invocation to process data. For instance, a distance computation service that relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
+
+\textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
+		
+The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service. Its corresponding workflow representation is depicted in Figure \ref{fig:timeBasedWindowWF}.
+		
+\lstset{language=AbStM,showstringspaces=false}
+\begin{lstlisting}[caption={ASM specification for the time-based window},label=TimeWindowListing]
+if( ctl_state = 'active')
+  seq
+     inTuple := readTuple()
+     if(inTuple = nil)
+        skip
+     else
+        seq
+           oldTuple := cq.peekFirst()
+           iterate(oldTuple != nil)
+              if(oldTuple.ts + range < inTuple.ts)
+                 seq
+                    oldTuple.sign := -1
+                    oldTuple.ts := oldTuple.ts + range
+                    output(oldTuple)
+                    cq.removeFirst()
+                    oldTuple := cq.peekFirst()
+                 endseq
+           pq.enqueue(inTuple)
+           output(inTuple)
+        endseq
+  endseq
+\end{lstlisting}
+
+
+
+
+
+
+
+		
+
+
+
+
+
+
+
+
+
+
