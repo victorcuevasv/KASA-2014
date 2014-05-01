@@ -1,11 +1,15 @@
 	
 \section{Introduction}\label{sec:asasel:intro}
 
-The advances in mobile computing and communication bring promises of timely and inexpensive access to information, as well as of increasing interaction between people and software agents. Service-oriented architectures play a crucial role in these developments, since they  deal with the interoperability issues of the underlying systems.
+The advances in mobile computing and communication bring promises of timely and inexpensive access to information, as well as of increasing interaction between people and software agents. 
+%Service-oriented architectures play a crucial role in these developments, since they  deal with the interoperability issues of the underlying systems.
 
-We note in particular the proliferation of streaming and on-demand data services for accessing data pertaining to a multitude of domains, and possibly involving temporal and mobile properties. The availability of data services is accompanied by a democratization in access to computational resources. Nevertheless, users typically must rely on proprietary applications that delegate data processing to their backend, which makes it difficult to share resources and add new features.	
+%We note in particular 
+This phenomenon is due to the proliferation of streaming and on-demand data services for accessing data pertaining to a multitude of domains,  possibly involving temporal and mobile properties. The availability of data services is accompanied by a democratization in access to computational resources. Nevertheless, users typically must rely on proprietary applications that delegate data processing to their backend, which makes it difficult to share resources and add new features.	
 	
-Therefore we propose ASASEL (Abstract State Machines Execution Language) to build up systems from shared resources accessible as services via data-centric workflow specifications. Our work considers both on-demand and streaming data services producing complex values, operations on these data, and the ability to construct composite computation services to process them. In addition, we propose a workflow transformation framework currently under development based on planning techniques to meet quality of service goals. We present a concrete implementation of this framework covering parallelization through the workflow structure.
+Therefore we propose ASASEL (Abstract State Machines Execution Language) to build up systems from shared resources accessible as services via data-centric workflow specifications. Our work considers both on-demand and streaming data services producing complex values, operations on these data, and the ability to construct composite computation services to process them. In addition, we propose a workflow transformation framework 
+%currently under development 
+based on planning techniques to meet quality of service goals. We present a concrete implementation of this framework covering parallelization through the workflow structure.
 
 The remainder of this paper is structured as follows. Section \ref{sec:dataCentricWorkflows} presents our workflow model and language, while Section \ref{sec:complexValuesDataModel} introduces our complex values data model and related operations. In Section \ref{sec:workflowTransformation} we present a planning-based workflow transformation framework, whose experimental results are presented in Section \ref{sec:experiments}. Our system implementation is discussed in Section \ref{sec:systemImplementation}. Section \ref{sec:relatedWork} discusses related work. Finally, we present our conclusions and discuss future work in Section \ref{sec:conclusions}.
 

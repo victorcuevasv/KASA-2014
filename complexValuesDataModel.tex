@@ -73,7 +73,7 @@ Inspired in the traditional relational operators, they apply to complex values i
 These operators take into consideration common values occurring in several tuples, therefore facilitating grouping or ungrouping them (which gives the operators their names). The specification of the group operator is presented next.
 
 \vspace*{0.25cm}
-\noindent \textbf{Group}. Intuitively, grouping a set of tuple complex values $R$ over a set of attributes $X$ implies aggregating the tuples that are equal in all attributes except those in $X$ to create a single tuple, which will contain a new set attribute with new tuples containing all of the $X$-values of the aggregated input tuples. This set attribute is given a new name, as are the tuples built from the $X$ attributes that are contained in it; both of which are specified in the group expression.
+\noindent \textbf{Group}. Intuitively, grouping a set of tuple complex values $R$ over a set of attributes $X$ implies aggregating the tuples that are equal in all attributes except those in $X$ to create a single tuple. This tuple  will contain a new set attribute with new tuples containing all of the $X$-values of the aggregated input tuples. This set attribute is given a new name, as are the tuples built from the $X$ attributes that are contained in it; both of which are specified in the group expression.
 
 \begin{itemize}
 	\item \textit{Notation}: $\ group_{exp}(R)$

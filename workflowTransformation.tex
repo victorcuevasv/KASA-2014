@@ -25,13 +25,13 @@
         %morekeywords={luents, actions, always, initial, if, inertial, after, inertial, noConcurrency,goal,not,caused,executable,nonexecutable,forbiden,requires}            % if you want to add more keywords to the set
 }
 
-\section{Workflow transformation} \label{sec:workflowTransformation}
+\section{Workflow enumeration} \label{sec:workflowTransformation}
 
-Workflow transformation is the process of enumerating all the equivalent workflows that satisfy the same functional requirements. The enumeration leads to a search space of workflows with increasing levels of parallelism in their structure. The levels of parallelism can privilege the cost preferences such as response time or the communication cost. The transformation is subject to constraints for composing the required activities by the ASASEL specification. We model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k}.
+This section decribes the process of enumerating all the equivalent workflows that satisfy the same functional requirements given by an ASASEL specification. The enumeration leads to a search space of workflows with increasing levels of parallelism in their structure. The levels of parallelism can privilege the cost preferences such as response time or the communication cost. The enumeration is subject to constraints for composing the required activities by the ASASEL specification. We model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k}.
 
 In DLV-K, planning problems have a set of facts that represent the problem domain named background knowledge. The facts are predicates of static knowledge and are the input of the planning problem. Planning problems are modeled as state machines described by a set of fluents and a set of actions. A fluent is a property of an object in the world and is part of the states of the world. Fluents may be true, false or unknown. An action is executable if a precondition holds in the current state. Once an action is executed, the fluents and thus the state of the plan are modified. The action rules define the subset of fluents that must be held before the execution of an action (\ie{} pre-conditions) and the subset of fluents to be held after the execution (\ie{} post-conditions). Finally, a goal is a set of fluents that must be reached at the end of the plan. A goal is expressed by the conjunction of fluents and by a plan length $l \in \mathds{Z}^{+}$.
 
-The mapping from workflow transformation to a planning problem is shown in Table \ref{tab:mappingQW-PP}. The APIs and the required activities by the ASASEL specification are modeled as facts of the background knowledge. The execution state of a workflow is modeled as fluents and the activities to perform as actions.
+The mapping from workflow enumeration to a planning problem is shown in Table \ref{tab:mappingQW-PP}. The APIs and the required activities by the ASASEL specification are modeled as facts of the background knowledge. The execution state of a workflow is modeled as fluents and the activities to perform as actions.
 	
 	\begin{table}
 	   \begin{center}
@@ -53,10 +53,10 @@ The mapping from workflow transformation to a planning problem is shown in Table
 	   \label{tab:mappingQW-PP}
 	\end{table}
 	
-Next we show, through an example, how we represent the background knowledge for workflow transformation. Afterwards, we show how the workflow state and activities are expressed in DLV-K rules. Given such rules, the DLV-K engine performs the workflow transformation.
+Next we show, through an example, how we represent the background knowledge for workflow enumeration. Afterwards, we show how the workflow state and activities are expressed in DLV-K rules. Given such rules, the DLV-K engine performs the workflow enumeration.
 
 \subsection{Background knowledge} \label{subsec:kb}
-The background knowledge contains a set of facts that serve as the input for the workflow transformation. It includes (1) the service methods and (2) the required activities derived from the ASASEL specification.
+The background knowledge contains a set of facts that serve as the input for the workflow enumeration. It includes (1) the service methods and (2) the required activities derived from the ASASEL specification.
                
 \textbf{Service methods} are represented by the facts \texttt{method/2}. The bound and free attributes associated to such a method are represented by the facts \texttt{bound_p/4} and \texttt{free_p/4}. The rule \texttt{att/4} represents the normal form of an attribute.
 
@@ -163,7 +163,7 @@ There is the fluent \texttt{all\_filtered} that becomes true if there is no othe
 
 \lstinputlisting[firstline=84, lastline=85, fontadjust=false, label=list:project]{code/aesop.plan}
 \vspace*{0.25cm}
-During the workflow execution, all the projection activities have to been performed. For the method \texttt{DS}, the fluent \texttt{all\_projected\_from} is true if there is no other attribute from \texttt{DS} pending to be projected. The fluent \texttt{all\_projected} is true if there is no other \texttt{DS} with an attribute pending to be projected.
+During the workflow execution, all the projection activities have to  be performed. For the method \texttt{DS}, the fluent \texttt{all\_projected\_from} is true if there is no other attribute from \texttt{DS} pending to be projected. The fluent \texttt{all\_projected} is true if there is no other \texttt{DS} with an attribute pending to be projected.
                 
 %\lstinputlisting[firstline=88, lastline=92, fontadjust=false, label=list:all-projected-from, caption={all\_projected\_from fluent}]{code/aesop.plan}
 
