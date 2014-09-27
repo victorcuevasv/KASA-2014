@@ -72,7 +72,7 @@ The background knowledge contains a set of facts that serve as the input for the
 
 \lstinputlisting[fontadjust=true, label=list:hybridQuery]{code/query-FF1.kb}
 \vspace*{0.25cm}
-These required activities express the need over the methods \texttt{p:profl} and \texttt{i:interests}. Both data are retrieved by \texttt{retrive\_/3} and represented by \texttt{p1} and \texttt{i1}. The nickname attribute of the profile is filtered by \texttt{filter\_/2} and correlated by \texttt{join\_/4} interests through the nickname attribute. The attributes nickname, score and tag are projected. Observe that the filter over the nickname attribute is only indicated as the equality operators are not relevant for the workflow transformation.
+These required activities express the need over the methods \texttt{p:profl} and \texttt{i:interests}. Both data are retrieved by \texttt{retrieve\_/3} and represented by \texttt{p1} and \texttt{i1}. The nickname attribute of the profile is filtered by \texttt{filter\_/2} and correlated by \texttt{join\_/4} interests through the nickname attribute. The attributes nickname, score and tag are projected. Observe that the filter over the nickname attribute is only indicated as the equality operators are not relevant for the workflow transformation.
 
 \subsection{Workflow activities}
 Workflow activities are represented as actions in DLV-K. Such actions are predicates that require facts from the background knowledge to be true. There are also activities that are independent from facts.
@@ -150,7 +150,7 @@ In order to retrieve all the required data, all data services should be connecte
 
 \lstinputlisting[firstline=74, lastline=76, fontadjust=false, label=list:select-activity]{code/aesop2.plan}
 \vspace*{0.25cm}
-As might several filter activities over \texttt{DS} are required, the \texttt{all_filtered_from} becomes true if there is no other attribute pending to be filtere.
+As might several filter activities over \texttt{DS} are required, the \texttt{all_filtered_from} becomes true if there is no other attribute pending to be filtered.
 
 %\lstinputlisting[firstline=77, lastline=78, fontadjust=false, label=list:all-selected-from, caption={all\_select\_from fluent}]{code/aesop.plan}
 
