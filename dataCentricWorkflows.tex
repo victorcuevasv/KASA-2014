@@ -54,7 +54,7 @@ endseq
 
 \begin{figure}
 	\centering
-		\epsfig{file=Images/FriendFinderQueryWF.pdf, scale=0.47}
+		\epsfig{file=Images/FriendFinderQueryWF.pdf, scale=0.40}
 		\caption{Data-centric workflow for example application}
 		\label{fig:servCoorExample}
 \end{figure}
@@ -70,43 +70,7 @@ A workflow $W$ is modeled as a directed acyclic graph $W=(V, E, in, out, A, C)$ 
 				$C \subseteq V$          & is a set of composition operators $\{par_1,...,par_n\}$\\.     
 			\end{tabular}   
 		\end{center}
-There are three types of vertices: \textit{activities} perform a service method invocation and always have ancestor and descendant vertices, \textit{in} vertices have no ancestors and their only goal is to launch the first \textit{activity} of the workflow, \textit{out} vertices have no descendants and stop the workflow execution after the last \textit{activity}.
-
-A series of construction rules enable to generate a workflow graph from a given ASM. Next, we assume that the vertices representing rules have annotations making them unique, whereas the $par$ and $endpar$ vertices of parallel compositions are made unique using automatically generated labels $l$.
-
-For an ASM $M$, the function \textit{asmwfg} specifies the \textit{workflow graph} such that \textit{asmwfg}$(M) = (V, E, in, out, A, C)$, as follows. We use $R$ to represent rules of different types. Due to space restrictions we limit our presentation to the update, parallel composition, and sequential composition rules, in that order. The full rules including conditionals and iteration are presented in \cite{vcv}.
-
-\begin{enumerate}
-\item \text{if $R = \ f := g(t_1,...,t_n)$ then}\\
-			\text{$V = \{R, in, out\}$},
-			\text{$A = \{R\}$},
-			\text{$E = \{(in, R), (R, out)\}$};
-			\text{$in$, $out$ are new vertices}\\
-
-\item	\text{if $R = \ \textbf{par} R_1 ... R_n \textbf{endpar}$ then}\\
-			\text{Let \textit{asmwfg}$(R_i) = (V_i, E_i, in_i, out_i, A_i, C_i)$, for all $i \in [1..n]$}\\
-			\text{$V = (V_1 - \{out_1\}) \cup \bigcup \limits_{j=2}^{n-1}{(V_j - (\{in_j, out_j\}))}$}
-			\text{$\cup \ (V_n - \{in_n\}) \cup  \{par_l, endpar_l\}$}\\
-			\text{$A = \bigcup \limits_{j=1}^{n}{A_j}$},
-			\text{$C = \bigcup \limits_{j=1}^{n}{C_j} \cup \{par_l, endpar_l\}$}\\
-			\text{$E = \{(in_1, par_l), (endpar_l, out_n)\}$}\\
-			\text{$\cup \bigcup \limits_{j=1}^{n}{E_j - \{(in_j, v_j), (v_j', out_j) | v_j, v_j' \in V_j\}} $}\\
-			\text{$\cup \bigcup \limits_{j=1}^{n}{\{(par_l, v_j) | (in_j, v_j) \in E_j\}} $}
-			\text{$\cup \bigcup \limits_{j=1}^{n}{\{(v_j', endpar_l) | (v_j', out_j) \in E_j\}} $}\\
-			\text{$par_l$, $endpar_l$ are new vertices with label $l$}\\
-			\text{also $in = in_1$ and $out = out_n$;}\\
-
-\item \text{if $R = \ \textbf{seq} R_1 ... R_n \textbf{endseq}$ then}\\
-			\text{Let \textit{asmwfg}$(R_i) = (V_i, E_i, in_i, out_i, A_i, C_i)$, for all $i \in [1..n]$}\\
-			\text{$V = (V_1 - \{out_1\}) \cup \bigcup \limits_{j=2}^{n-1}{(V_j - (\{in_j, out_j\}))}$}
-			\text{$\cup \ (V_n - \{in_n\})$}\\
-			\text{$A = \bigcup \limits_{j=1}^{n}{A_j}$},
-			\text{$C = \bigcup \limits_{j=1}^{n}{C_j}$}\\
-			\text{$E = \{(in_1, v_1) | (in_1, v_1) \in E_1\} \cup \{(v_n, out_n) | (v_n, out_n) \in E_n\}$}\\
-			\text{$\cup \bigcup \limits_{j=1}^{n}{E_j - \{(in_j, v_j), (v_j', out_j) | v_j, v_j' \in V_j\}} $}\\
-			\text{$\cup \bigcup \limits_{j=1}^{n-1}{\{(v_j, v_{j+1}') | (v_j, out_j) \in E_j, (in_{j+1}, v_{j+1}') \in E_{j+1}\}} $}\\
-			\text{where $in = in_1$ and $out = out_n$;}\\
-\end{enumerate}
+There are three types of vertices: \textit{activities} perform a service method invocation and always have ancestor and descendant vertices, \textit{in} vertices have no ancestors and their only goal is to launch the first \textit{activity} of the workflow, \textit{out} vertices have no descendants and stop the workflow execution after the last \textit{activity}. A series of construction rules enable to generate a workflow graph from a given ASM, which are detailed in \cite{vcv}.
 
 \subsection{Computation services}\label{subsec:computationServices}
 
@@ -114,7 +78,7 @@ Two kinds of computation services form part of our approach: simple computation 
 
 \begin{figure*}
    \begin{center}
-      \scalebox{0.875}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
+      \scalebox{0.785}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
    \end{center}
    \caption{Workflow representation of the time-based window}
    \label{fig:timeBasedWindowWF}
