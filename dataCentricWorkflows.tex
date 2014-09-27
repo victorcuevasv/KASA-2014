@@ -1,7 +1,7 @@
 
 \section{Data-Centric Workflows}\label{sec:dataCentricWorkflows}
 
-We introduce our approach with a prototypical Friend Finder application, although our approach can be applied to a broader range of applications. Consider a scenario in which multiple users are in an urban area carrying GPS-enabled mobile devices that periodically transmit their location. Assume that they have agreed to share some of their personal information. A user in this scenario may want to \textit{Find friends recently located no more than 3 km away from me, which are over 21 years old and that are interested in art}.
+Consider a Friend Finder application in which multiple users carry mobile devices that periodically transmit their location. Assume that they have agreed to share some of their personal information. A user in this scenario may want to \textit{Find friends recently located no more than 3 km away from me, which are over 21 years old and that are interested in art}.
 
 Data services produce data in one of two ways: on-demand in response to a given request, or continuously as a data stream. In either case, the data service exposes an interface, composed of several operations and supported by standardized protocols. The JavaScript Object Notation is used to represent the data. Accordingly, objects are built from atomic values, nested tuples, and lists.
 
@@ -54,7 +54,7 @@ endseq
 
 \begin{figure}
 	\centering
-		\epsfig{file=Images/FriendFinderQueryWF.pdf, scale=0.40}
+		\epsfig{file=Images/FriendFinderQueryWF.pdf, scale=0.50}
 		\caption{Data-centric workflow for example application}
 		\label{fig:servCoorExample}
 \end{figure}
@@ -76,19 +76,19 @@ There are three types of vertices: \textit{activities} perform a service method 
 
 Two kinds of computation services form part of our approach: simple computation services and composite computation services specified in the ASASEL language.
 
-\begin{figure*}
-   \begin{center}
-      \scalebox{0.785}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
-   \end{center}
-   \caption{Workflow representation of the time-based window}
-   \label{fig:timeBasedWindowWF}
-\end{figure*}
+%\begin{figure*}
+%   \begin{center}
+%      \scalebox{0.785}{\includegraphics[natwidth=12.31cm,natheight=7.16cm]{Images/time-based-window.pdf}}
+%   \end{center}
+%   \caption{Workflow representation of the time-based window}
+%   \label{fig:timeBasedWindowWF}
+%\end{figure*}
 
 \textbf{Simple computation services}  involve a single service operation invocation to process data. For instance, a distance computation service that relies on a \texttt{geo-distance} service, which provides the capability to calculate the geographical distance between two points, e.g., by Vincenty's formula.
 
 \textbf{Composite computation services}  process data by multiple operation invocations, possibly from different services, and often also by the manipulation of local data. These tasks are organized in a service coordination specified in the ASASEL language and represented as a workflow, following a model in which we add data items as well as conditional and iteration constructs to our basic parallel and sequential composition workflow model illustrated in Figure \ref{fig:servCoorExample}.
 		
-The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service. Its corresponding workflow representation is depicted in Figure \ref{fig:timeBasedWindowWF}.
+The specification of a time-based window composite service in ASASEL is presented in Listing \ref{TimeWindowListing}, based on a simple \texttt{calendar-queue} service. It has a corresponding workflow representation as detailed in \cite{vcv}.
 		
 \lstset{language=AbStM,showstringspaces=false}
 \begin{lstlisting}[caption={ASM specification for the time-based window},label=TimeWindowListing]
