@@ -98,7 +98,7 @@ caused -activities_performed if not all_connected,not all_retrieved,
 caused  activities_performed if not -activities_performed.
 
 executable output if activities_performed, not delivered.
-caused    delivered after output.
+caused delivered after output.
 
 inertial initiated.
 inertial connected(DS).
