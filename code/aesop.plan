@@ -36,10 +36,10 @@ bind_join(DS1,P1,DS2,BP2)
 
 
 
-filter(DS,P) requires method(DSN,ON),
-                      retrieve_(DSN,ON,DS),
-                      att(DSN,ON,P,_),
-                      filter_(DS,P).
+filter(DS,P) requires method(DSN,ON), retrieve_(DSN,ON,DS),
+                      att(DSN,ON,P,_), filter_(DS,P).
+
+
 
 project(DS,P) requires project_(DS,P,_).
 
@@ -58,9 +58,9 @@ caused     connected(DS) after data_service(DS).
 caused -all_connected if not connected(DS).
 caused  all_connected if not -all_connected.
 
-executable bind_selection(DS,BP)
-  if not retrieved(DS), connected(DS).
+executable bind_selection(DS,BP) if not retrieved(DS), connected(DS).
 caused retrieved(DS) after bind_selection(DS,BP).
+
 
 
 executable bind_join(DS1,P1,DS2,P2) if not joined(DS1,P1,DS2,P2),
@@ -78,28 +78,26 @@ caused -all_filtered_from(DS) if not filtered(DS,P), filter_(DS,P).
 caused  all_filtered_from(DS) if not -all_filtered_from(DS), retrieved(DS).
 
 caused -all_filtered if -all_filtered_from(DS), filter_(DS,P).
-caused -all_filtered if -all_filtered_from(DS), not filter_(DS,P), att(DSN,ON,P,_),
-  retrieve_(DSN,ON,DS).
+caused -all_filtered if -all_filtered_from(DS), not filter_(DS,P),
+                         att(DSN,ON,P,_), retrieve_(DSN,ON,DS).
 caused  all_filtered if not -all_filtered.
-executable project(DS,P) if not projected(DS,P),
-   retrieved(DS), project_(DS,P,_).
+executable project(DS,P) if not projected(DS,P),retrieved(DS),
+                            project_(DS,P,_).
+
 caused     projected(DS,P) after project(DS,P).
 
-caused -all_projected_from(DS) if
-  not projected(DS,P), project_(DS,P,_).
-caused  all_projected_from(DS) if
-  not -all_projected_from(DS) after project(DS,P).
-caused -all_projected if
-  -all_projected_from(DS), project_(DS,P,_).
-caused  all_projected if not -all_projected.
-caused -activities_performed
-  if not all_connected, not all_retrieved,
-     not all_filtered,  not all_projected.
-caused  activities_performed
-  if not -activities_performed.
+caused -all_projected_from(DS) if not projected(DS,P), project_(DS,P,_).
+caused  all_projected_from(DS) if not -all_projected_from(DS)
+                               after project(DS,P).
+caused -all_projected if -all_projected_from(DS), project_(DS,P,_).
 
-executable output if activities_performed,
-  not delivered.
+
+caused  all_projected if not -all_projected.
+caused -activities_performed if not all_connected,not all_retrieved,
+                                not all_filtered, not all_projected.
+caused  activities_performed if not -activities_performed.
+
+executable output if activities_performed, not delivered.
 caused    delivered after output.
 
 inertial initiated.

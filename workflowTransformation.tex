@@ -27,7 +27,7 @@
 
 \section{Workflow enumeration} \label{sec:workflowTransformation}
 
-This section decribes the process of enumerating all the equivalent workflows that satisfy the same functional requirements given by an ASASEL specification. The enumeration leads to a search space of workflows with increasing levels of parallelism in their structure. The levels of parallelism can privilege the cost preferences such as response time or the communication cost. The enumeration is subject to constraints for composing the required activities by the ASASEL specification. We model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k}.
+This section decribes the process of enumerating all the equivalent workflows that satisfy the same functional requirements given by an ASASEL specification. The enumeration leads to a search space of workflows with increasing levels of parallelism in their structure. The levels of parallelism can privilege the cost preferences such as response time or the communication cost. The enumeration is subject to constraints for composing the required activities by the ASASEL specification. In order to make a proof of concept, we model these constraints as action rules in the language DLV-K\footnote{http://www.dbai.tuwien.ac.at/proj/dlv/k}.
 
 In DLV-K, planning problems have a set of facts that represent the problem domain named background knowledge. The facts are predicates of static knowledge and are the input of the planning problem. Planning problems are modeled as state machines described by a set of fluents and a set of actions. A fluent is a property of an object in the world and is part of the states of the world. Fluents may be true, false or unknown. An action is executable if a precondition holds in the current state. Once an action is executed, the fluents and thus the state of the plan are modified. The action rules define the subset of fluents that must be held before the execution of an action (\ie{} pre-conditions) and the subset of fluents to be held after the execution (\ie{} post-conditions). Finally, a goal is a set of fluents that must be reached at the end of the plan. A goal is expressed by the conjunction of fluents and by a plan length $l \in \mathds{Z}^{+}$.
 
@@ -86,7 +86,7 @@ Workflow activities are represented as actions in DLV-K. Such actions are predic
 
 %\lstinputlisting[firstline=23, lastline=23, fontadjust=false, label=list:qw-on-demand, caption={on-demand activity}]{code/aesop.plan}
 
-\lstinputlisting[firstline=23, lastline=24, fontadjust=false, label=list:qw-on-demand]{code/aesop2.plan}
+\lstinputlisting[firstline=23, lastline=23, fontadjust=false, label=list:qw-on-demand]{code/aesop2.plan}
 \vspace*{0.25cm}
 \textbf{bind\_selection} invokes a service method and retrieves data from it. The invocation is done by providing a bound attribute. 
 
@@ -98,13 +98,13 @@ Workflow activities are represented as actions in DLV-K. Such actions are predic
                      
 %\lstinputlisting[firstline=30, lastline=35, fontadjust=false, label=list:qw-bind-join, caption={bind-join activity}]{code/aesop.plan}
 
-\lstinputlisting[firstline=31, lastline=35, fontadjust=false, label=list:qw-bind-join]{code/aesop2.plan}
+\lstinputlisting[firstline=31, lastline=34, fontadjust=false, label=list:qw-bind-join]{code/aesop2.plan}
 \vspace*{0.25cm}           
 \textbf{filter} performs the filtering over an attribute of a required service method.
             
 %\lstinputlisting[firstline=39, lastline=42, fontadjust=false, label=list:qw-select, caption={select activity}]{code/aesop.plan}
 
-\lstinputlisting[firstline=39, lastline=42, fontadjust=false, label=list:qw-select]{code/aesop.plan}
+\lstinputlisting[firstline=39, lastline=40, fontadjust=false, label=list:qw-select]{code/aesop.plan}
 \vspace*{0.25cm}                
 \textbf{project} projects an attribute of a service method.
                      
@@ -142,7 +142,7 @@ In order to retrieve all the required data, all data services should be connecte
       
 %\lstinputlisting[firstline=61, lastline=63, fontadjust=false, label=list:bind-selection-activity, caption={bind\_ selection activity}]{code/aesop.plan}
 
-\lstinputlisting[firstline=61, lastline=63, fontadjust=false, label=list:bind-selection-activity]{code/aesop.plan}
+\lstinputlisting[firstline=61, lastline=62, fontadjust=false, label=list:bind-selection-activity]{code/aesop.plan}
 \vspace*{0.25cm}
 \textbf{filter} It is executable if there is not evidence that the attribute \texttt{P} of \texttt{DS} has been filtered. It is required that the data from \texttt{DS} have been retrieved and the activity \texttt{select_(DS,P)} must be required. The execution of the filter makes the fluent \texttt{filtered(DS,P)} true.
 
@@ -154,7 +154,7 @@ As might several filter activities over \texttt{DS} are required, the \texttt{al
 
 %\lstinputlisting[firstline=77, lastline=78, fontadjust=false, label=list:all-selected-from, caption={all\_select\_from fluent}]{code/aesop.plan}
 
-\lstinputlisting[firstline=77, lastline=80, fontadjust=false, label=list:all-selected-from]{code/aesop2.plan}
+\lstinputlisting[firstline=77, lastline=79, fontadjust=false, label=list:all-selected-from]{code/aesop2.plan}
 \vspace*{0.25cm}
 There is the fluent \texttt{all\_filtered} that becomes true if there is no other attribute of the method \texttt{DS} pending to be filtered.
 
@@ -172,7 +172,7 @@ During the workflow execution, all the projection activities have to  be perform
                 
 %\lstinputlisting[firstline=88, lastline=92, fontadjust=false, label=list:all-projected-from, caption={all\_projected\_from fluent}]{code/aesop.plan}
 
-\lstinputlisting[firstline=88, lastline=94, fontadjust=false, label=list:all-projected-from]{code/aesop.plan}
+\lstinputlisting[firstline=89, lastline=92, fontadjust=false, label=list:all-projected-from]{code/aesop.plan}
 \vspace*{0.25cm}                  
 \textbf{output} Once all the required activities are performed, the result is delivered by the activity \texttt{output}. To model this pre-condition, the fluent \texttt{activities\_performed} is true if all the required activities have been processed. Otherwise, the fluent is false \texttt{-activities\_performed}.
 
@@ -184,7 +184,7 @@ Once the result is delivered by \texttt{output}, the fluent \texttt{delivered} b
 
 %\lstinputlisting[firstline=101, lastline=102, fontadjust=false, label=list:output, caption={output fluent}]{code/aesop.plan}
 
-\lstinputlisting[firstline=101, lastline=103, fontadjust=false, label=list:output]{code/aesop.plan}
+\lstinputlisting[firstline=100, lastline=101, fontadjust=false, label=list:output]{code/aesop.plan}
 
 
 

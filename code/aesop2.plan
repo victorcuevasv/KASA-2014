@@ -20,8 +20,8 @@ finished.
 actions:
 init.
 finish.
-data_service(DS) requires method(DSN,ON), 
-   retrieve_(DSN,ON,DS).
+data_service(DS) requires method(DSN,ON), retrieve_(DSN,ON,DS).
+
 
 
 bind_selection(DS,BP) requires method(DSN,ON),
@@ -30,16 +30,16 @@ bind_selection(DS,BP) requires method(DSN,ON),
 
 bind_join(DS1,P1,DS2,BP2) requires
    method(DSN1,ON1), retrieve_(DSN1,ON1,DS1),
-   att(DSN1,ON1,P1,_), method(DSN2,ON2),
-   retrieve_(DSN2,ON2,DS2),
+   att(DSN1,ON1,P1,_), method(DSN2,ON2), retrieve_(DSN2,ON2,DS2),
    bound_a(DSN2,ON2,BP2,_), join_(DS1,P1,DS2,BP2).
 
 
 
-filter(DS,P) requires method(DSN,ON),
-                      retrieve_(DSN,ON,DS),
-                      att(DSN,ON,P,_),
-                      filter_(DS,P).
+
+filter(DS,P) requires method(DSN,ON), retrieve_(DSN,ON,DS),
+                      att(DSN,ON,P,_), filter_(DS,P).
+
+
 
 project(DS,P) requires project_(DS,P,_).
 
@@ -71,13 +71,13 @@ caused retrieved(DS) if joined(DS1,P1,DS2,P2) after bind_join(DS1,P1,DS2,P2).
 caused -all_retrieved if not retrieved(DS), retrieve_(DSN,ON,DS).
 caused  all_retrieved if not -all_retrieved.
 
-executable filter(DS,P) if not
-   filtered(DS,P), retrieved(DS), filter_(DS,P).
+executable filter(DS,P) if not filtered(DS,P),
+           retrieved(DS),filter_(DS,P).
 caused filtered(DS,P) after filter(DS,P).
-caused -all_filtered_from(DS) if not
-   filtered(DS,P), filter_(DS,P).
-caused  all_filtered_from(DS) if not
-   -all_filtered_from(DS), retrieved(DS).
+caused -all_filtered_from(DS) if not filtered(DS,P), filter_(DS,P).
+caused  all_filtered_from(DS) if not -all_filtered_from(DS),
+                                 retrieved(DS).
+
 
 caused -all_filtered if -all_filtered_from(DS), filter_(DS,P).
 caused -all_filtered if -all_filtered_from(DS), not filter_(DS,P), att(DSN,ON,P,_), retrieve_(DSN,ON,DS).
