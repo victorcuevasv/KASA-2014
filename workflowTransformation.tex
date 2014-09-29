@@ -56,7 +56,7 @@ The mapping from workflow enumeration to a planning problem is shown in Table \r
 Next we show, through an example, how we represent the background knowledge for workflow enumeration. Afterwards, we show how the workflow state and activities are expressed in DLV-K rules. Given such rules, the DLV-K engine performs the workflow enumeration.
 
 \subsection{Background knowledge} \label{subsec:kb}
-The background knowledge contains a set of facts that serve as the input for the workflow enumeration. It includes (1) the service methods and (2) the required activities derived from the ASASEL specification.
+The background knowledge contains a set of facts of the form \texttt{fact/\#} where \#{} is the arity of the fact. Facts serve as the input for the workflow enumeration. It includes (1) the service methods and (2) the required activities derived from the ASASEL specification.
 
 \vspace*{0.25cm}
 \noindent               
@@ -66,13 +66,13 @@ The background knowledge contains a set of facts that serve as the input for the
 
 \lstinputlisting[fontadjust=true, label=list:service-interfaces]{code/service-interfaces-FF.kb}
 \vspace*{0.25cm}
-\textbf{Required activities} are derived from the ASASEL workflow specification and represented through facts (with the underscore at the end). The required activities derived from a workflow implementing ``\textit{What are the interests of my friend Joe}'' are represented by the following facts. 
+\textbf{Required activities} are derived from the ASASEL workflow specification and represented through facts (with the underscore at the end). The required activities derived from a workflow implementing ``\textit{What are the interests of my friend Joe?}'' are represented by the following facts. 
 
 %\lstinputlisting[fontadjust=true, label=list:hybridQuery, caption={Hybrid query in facts}]{code/query-FF1.kb}
 
 \lstinputlisting[fontadjust=true, label=list:hybridQuery]{code/query-FF1.kb}
 \vspace*{0.25cm}
-These required activities express the need over the methods \texttt{p:profl} and \texttt{i:interests}. Both data are retrieved by \texttt{retrieve\_/3} and represented by \texttt{p1} and \texttt{i1}. The nickname attribute of the profile is filtered by \texttt{filter\_/2} and correlated by \texttt{join\_/4} interests through the nickname attribute. The attributes nickname, score and tag are projected. Observe that the filter over the nickname attribute is only indicated as the equality operators are not relevant for the workflow transformation.
+These required activities express the need over the methods \texttt{p:profl} and\\\texttt{i:interests}. Both data are retrieved by \texttt{retrieve\_/3} and represented by \texttt{p1} and \texttt{i1}. The nickname attribute of the profile is filtered by \texttt{filter\_/2} and correlated by \texttt{join\_/4} interests through the nickname attribute. The attributes nickname, score and tag are projected. Observe that the filter over the nickname attribute is only indicated as the equality operators are not relevant for the workflow transformation.
 
 \subsection{Workflow activities}
 Workflow activities are represented as actions in DLV-K. Such actions are predicates that require facts from the background knowledge to be true. There are also activities that are independent from facts.
@@ -116,7 +116,7 @@ The semantics of these activities is completed with constraints that define thei
 				
 \subsection{Workflow constraints} 
 The workflow constraints define the pre-conditions and post-conditions associated to the execution of the workflow activities. A condition is a state of knowledge modifiable by the execution of activities. Through the satisfaction of such conditions, the workflows are transformed.
-In the following, we present the intuition of these constraints along with their rules in DLV-k.
+In the following, we present the intuition of these constraints along with their rules in DLV-K.
 
 \vspace*{0.25cm}              
 \noindent\textbf{init and finish} The \textbf{init} activity has no previous activity and its pre-condition is that the workflow has not been \texttt{initiated}. As post-condition, it produces the state \texttt{initiated}. The last activity is \texttt{finish} and there is no other activity to be executed afterwards. Its pre-condition is that there is not evidence that the workflow is \texttt{finished} and the result has been \texttt{delivered} (See \texttt{output} activity below for details about \texttt{delivered}). The post-condition of \texttt{finish} is \texttt{finished} and this is the goal to be reached for the workflow transformation.

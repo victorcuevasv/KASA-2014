@@ -5,8 +5,22 @@
 
 We performed experiments to measure the amount of alternative workflows with sequential compositions and with parallel compositions for a given ASASEL workflow.
 We setup seven different ASASEL workflows $WF^{1},...,WF^{7}$ with increasing number of activities and different potential grades of parallelism.
+
+	\begin{figure}
+		\centering
+		\begin{tabular}{lcr}
+				\subfloat[\maxpar{} workflow]{\epsfig{file=Images/maxpar.eps,scale=0.4}\label{fig:impl:maxpar}}
+				&\qquad\qquad{}&
+				\subfloat[\parminus{} workflow]{\epsfig{file=Images/maxseq.eps, scale=0.38}\label{fig:impl:maxseq}}			
+		\end{tabular}
+		\caption{Classification of alternative workflows}
+		\label{fig:impl:workflowClassificationEx}
+	\end{figure}
+
+\vspace*{-0.3cm}
+
 The generated workflows were classified by analyzing the data dependencies among activities and their structures.
-A workflow whose independent activities are composed in parallel is classified as \maxpar{}, otherwise it is classified as \parminus{}.
+A workflow whose independent activities are composed in parallel is classified as \maxpar{}, \cf{} Figure \ref{fig:impl:maxpar}; otherwise it is classified as \parminus{}, \cf{} Figure \ref{fig:impl:maxseq}.
 The charts in Figure \ref{fig:impl:ssDFCF} show the search spaces with the classification of workflows and the required time for each ASASEL workflow $WF^{1},...,WF^{7}$.
 
 
@@ -22,11 +36,11 @@ The charts in Figure \ref{fig:impl:ssDFCF} show the search spaces with the class
 	\end{figure}
 				
 In Figure \ref{fig:searchspaceClassification}, the search spaces of the workflows $WF^{1}-WF^{3}$ only contain \maxpar{} workflows because they have few activities and there are no independent activities.
-The search spaces of the workflows $WF^{4}-WF^{7}$ have ~1/3 of \maxpar{} workflows and ~2/3 \parminus{} workflows. 
+The search spaces of the workflows $WF^{4}-WF^{7}$ have $\sim${}1/3 of \maxpar{} workflows and $\sim$2/3 \parminus{} workflows. 
 This correspondence is not constant and depends on the data dependencies among activities, \eg{} a workflow with many activities may have only sequential alternatives if there are no independent activities.
 
-The \maxpar{} workflows represent better opportunities for improving time related costs while the \parminus{} ones privilege the resource usage (\eg{} network, cpu).
-This classification can be used for improving the enumeration performance (\cf{} Figure \ref{fig:timeGraph}) by incorporating user/application preferences for obtaining only \maxpar{} or \parminus{}.
+The \maxpar{} workflows represent good opportunities for improving time related costs while the \parminus{} ones privilege the resource usage.
+This classification can be used for improving the enumeration performance (\cf{} Figure \ref{fig:timeGraph}) by incorporating user's preferences over the costs or QoS measures associated to the workflow execution.
 
  
 %%\vspace*{1cm}
